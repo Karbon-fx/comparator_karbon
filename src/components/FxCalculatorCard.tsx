@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
@@ -86,7 +87,10 @@ export default function FxCalculatorCard() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     const numValue = Number(value.replace(/[^0-9]/g, ''));
-     if (Number.isFinite(numValue)) {
+    if (numValue > 100000) {
+        setUsdAmount(100000);
+        setUsdInputError("Maximum is $100,000");
+    } else if (Number.isFinite(numValue)) {
       setUsdAmount(numValue);
       setUsdInputError(null);
     }
