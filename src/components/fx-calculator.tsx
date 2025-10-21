@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useState, useEffect } from 'react';
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusCircle, Trash2, Loader2, AlertTriangle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Switch } from '@/components/ui/switch';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Separator } from '@/components/ui/separator';
+import { Switch } from '@/components/ui/switch';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 import { cn, formatAsINR } from '@/lib/utils';
 import { type CalculatorFormValues, calculatorSchema, type CalculationResult, type LiveRateResponse } from '@/lib/types';
@@ -32,7 +30,7 @@ export default function FxCalculator() {
     defaultValues: {
       usdAmount: 1000,
       useCustomLiveRate: false,
-      customLiveRate: undefined,
+      customLiveRate: 0,
       providers: [
         { id: 'bank', name: 'Bank', rate: 85.1718 },
         { id: 'paypal', name: 'PayPal', rate: 85.3107 },
@@ -47,7 +45,6 @@ export default function FxCalculator() {
   
   const watchedValues = form.watch();
   
-  // Memoize watched values to prevent unnecessary re-renders in useEffect
   const usdAmount = watchedValues.usdAmount;
   const useCustomLiveRate = watchedValues.useCustomLiveRate;
   const customLiveRate = watchedValues.customLiveRate;
@@ -82,9 +79,12 @@ export default function FxCalculator() {
   }, [toast, form]);
 
   useEffect(() => {
-    const liveRate = useCustomLiveRate ? customLiveRate : liveRateData?.rate;
+    const liveRateValue = useCustomLiveRate ? customLiveRate : liveRateData?.rate;
+    const liveRate = Number.isFinite(liveRateValue) ? liveRateValue : undefined;
+    
+    const currentUsdAmount = Number(usdAmount);
 
-    if (!usdAmount || !liveRate || !providers) {
+    if (!Number.isFinite(currentUsdAmount) || currentUsdAmount <= 0 || !liveRate || !providers) {
       setCalculationResults([]);
       return;
     }
@@ -93,17 +93,28 @@ export default function FxCalculator() {
       providerName: 'Karbon (Zero-Markup)',
       offeredRate: liveRate,
       markup: 0,
-      totalInr: calculateTotalInr(usdAmount, liveRate),
+      totalInr: calculateTotalInr(currentUsdAmount, liveRate),
       savings: 0,
       isBestSavings: false
     };
 
     const competitorResults = providers.map(provider => {
-      const totalInr = calculateTotalInr(usdAmount, provider.rate);
+      const providerRate = Number(provider.rate);
+      if (!Number.isFinite(providerRate) || providerRate <= 0) {
+        return {
+          providerName: provider.name,
+          offeredRate: provider.rate,
+          markup: 0,
+          totalInr: 0,
+          savings: 0,
+          isBestSavings: false,
+        };
+      }
+      const totalInr = calculateTotalInr(currentUsdAmount, providerRate);
       return {
         providerName: provider.name,
-        offeredRate: provider.rate,
-        markup: calculateMarkup(liveRate, provider.rate),
+        offeredRate: providerRate,
+        markup: calculateMarkup(liveRate, providerRate),
         totalInr: totalInr,
         savings: calculateSavings(karbonResult.totalInr, totalInr),
         isBestSavings: false,
@@ -111,7 +122,8 @@ export default function FxCalculator() {
     });
 
     const allResults = [karbonResult, ...competitorResults];
-    const maxSavings = Math.max(...allResults.map(r => r.savings));
+    const validSavings = allResults.map(r => r.savings).filter(s => Number.isFinite(s));
+    const maxSavings = validSavings.length > 0 ? Math.max(...validSavings) : 0;
     
     if (maxSavings > 0) {
       const bestSavingsIndex = allResults.findIndex(r => r.savings === maxSavings);
@@ -155,7 +167,7 @@ export default function FxCalculator() {
                     <FormItem>
                       <FormLabel>USD Amount to Convert</FormLabel>
                       <FormControl>
-                        <Input type="number" placeholder="e.g., 1000" {...field} />
+                        <Input type="number" placeholder="e.g., 1000" {...field} value={field.value ?? ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -181,6 +193,7 @@ export default function FxCalculator() {
                                 step="any"
                                 placeholder={isLoadingRate ? "Fetching..." : "Enter rate"}
                                 {...field}
+                                value={field.value ?? ''}
                                 disabled={!watchedValues.useCustomLiveRate}
                             />
                           </FormControl>
@@ -232,7 +245,7 @@ export default function FxCalculator() {
                       <FormItem className="col-span-12 sm:col-span-5">
                         <FormLabel className="sr-only">Provider Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Provider Name" {...nameField} />
+                          <Input placeholder="Provider Name" {...nameField} value={nameField.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -245,7 +258,7 @@ export default function FxCalculator() {
                       <FormItem className="col-span-10 sm:col-span-6">
                          <FormLabel className="sr-only">Provider Rate</FormLabel>
                         <FormControl>
-                          <Input type="number" step="any" placeholder="Exchange Rate" {...rateField} />
+                          <Input type="number" step="any" placeholder="Exchange Rate" {...rateField} value={rateField.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -289,19 +302,26 @@ export default function FxCalculator() {
               </TableHeader>
               <TableBody>
                 {calculationResults.length > 0 ? (
-                  calculationResults.map((result) => (
-                    <TableRow key={result.providerName} className={cn(result.isBestSavings && "bg-accent/20")}>
-                      <TableCell className="font-medium">{result.providerName}</TableCell>
-                      <TableCell className="text-right">{result.offeredRate.toFixed(4)}</TableCell>
-                       <TableCell className={cn("text-right", result.markup < 0 && "text-green-600", result.markup > 0 && "text-destructive")}>
-                        {result.markup.toFixed(4)}
-                      </TableCell>
-                      <TableCell className="text-right font-semibold">{formatAsINR(result.totalInr)}</TableCell>
-                      <TableCell className={cn("text-right font-bold", result.isBestSavings && "text-primary")}>
-                        {formatAsINR(result.savings)}
-                      </TableCell>
-                    </TableRow>
-                  ))
+                  calculationResults.map((result) => {
+                    const offeredRateNum = Number(result.offeredRate);
+                    const offeredRateStr = Number.isFinite(offeredRateNum) ? offeredRateNum.toFixed(4) : "—";
+                    const markupNum = Number(result.markup);
+                    const markupStr = Number.isFinite(markupNum) ? markupNum.toFixed(4) : "—";
+
+                    return (
+                      <TableRow key={result.providerName} className={cn(result.isBestSavings && "bg-accent/20")}>
+                        <TableCell className="font-medium">{result.providerName}</TableCell>
+                        <TableCell className="text-right">{offeredRateStr}</TableCell>
+                        <TableCell className={cn("text-right", result.markup < 0 && "text-green-600", result.markup > 0 && "text-destructive")}>
+                          {markupStr}
+                        </TableCell>
+                        <TableCell className="text-right font-semibold">{formatAsINR(result.totalInr)}</TableCell>
+                        <TableCell className={cn("text-right font-bold", result.isBestSavings && "text-primary")}>
+                          {formatAsINR(result.savings)}
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 ) : (
                    <TableRow>
                     <TableCell colSpan={5} className="text-center text-muted-foreground h-24">

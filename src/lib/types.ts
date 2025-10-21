@@ -13,7 +13,8 @@ export const calculatorSchema = z.object({
   providers: z.array(providerSchema),
 }).refine(data => {
   if (data.useCustomLiveRate) {
-    return data.customLiveRate !== undefined && data.customLiveRate > 0;
+    const rate = Number(data.customLiveRate);
+    return Number.isFinite(rate) && rate > 0;
   }
   return true;
 }, {
