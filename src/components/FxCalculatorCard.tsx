@@ -1,329 +1,150 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PlusCircle, Trash2, Loader2, AlertTriangle } from 'lucide-react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { Slider } from '@/components/ui/slider';
+import { Badge } from '@/components/ui/badge';
+import { formatAsINR, cn } from '@/lib/utils';
+import Image from 'next/image';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Separator } from '@/components/ui/separator';
-
-import { cn, formatAsINR } from '@/lib/utils';
-import { type CalculatorFormValues, calculatorSchema, type CalculationResult, type LiveRateResponse } from '@/lib/types';
-import { calculateMarkup, calculateTotalInr, calculateSavings } from '@/lib/calculations';
-import { useToast } from "@/hooks/use-toast";
+const UsdFlag = () => (
+  <Image 
+    src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg"
+    alt="USD Flag"
+    width={24}
+    height={24}
+    className="rounded-full"
+  />
+);
 
 export default function FxCalculatorCard() {
-  const [liveRateData, setLiveRateData] = useState<LiveRateResponse | null>(null);
-  const [isLoadingRate, setIsLoadingRate] = useState(true);
-  const [apiError, setApiError] = useState<string | null>(null);
-  const [calculationResults, setCalculationResults] = useState<CalculationResult[]>([]);
-
-  const { toast } = useToast();
-
-  const form = useForm<CalculatorFormValues>({
-    resolver: zodResolver(calculatorSchema),
-    defaultValues: {
-      usdAmount: 1000,
-      useCustomLiveRate: false,
-      customLiveRate: 0,
-      providers: [
-        { id: 'bank', name: 'Bank', rate: 85.1718 },
-        { id: 'paypal', name: 'PayPal', rate: 85.3107 },
-      ],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "providers",
-  });
-  
-  const watchedValues = form.watch();
-  
-  const usdAmount = watchedValues.usdAmount;
-  const useCustomLiveRate = watchedValues.useCustomLiveRate;
-  const customLiveRate = watchedValues.customLiveRate;
-  const providers = watchedValues.providers;
+  const [usdAmount, setUsdAmount] = useState<number>(10000);
+  const [liveRate, setLiveRate] = useState<number | null>(null);
+  const [debouncedUsdAmount, setDebouncedUsdAmount] = useState(usdAmount);
+  const [deliveryDate, setDeliveryDate] = useState('');
 
   useEffect(() => {
-    async function fetchLiveRate() {
-      setIsLoadingRate(true);
-      setApiError(null);
+    const fetchLiveRate = async () => {
       try {
         const response = await fetch('/api/live-rate');
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || 'Failed to fetch live rate.');
-        }
-        const data: LiveRateResponse = await response.json();
-        setLiveRateData(data);
-        if (!form.getValues('useCustomLiveRate')) {
-          form.setValue('customLiveRate', data.rate);
+        const data = await response.json();
+        if (data.rate) {
+          setLiveRate(data.rate);
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred.';
-        setApiError(errorMessage);
-        toast({
-          variant: "destructive",
-          title: "API Error",
-          description: errorMessage,
-        });
-      } finally {
-        setIsLoadingRate(false);
+        console.error('Failed to fetch live rate:', error);
       }
-    }
+    };
     fetchLiveRate();
-  }, [toast, form]);
+  }, []);
 
   useEffect(() => {
-    const liveRateValue = useCustomLiveRate ? customLiveRate : liveRateData?.rate;
-    const liveRate = Number.isFinite(liveRateValue) ? liveRateValue : undefined;
-    
-    const currentUsdAmount = Number(usdAmount);
+    const handler = setTimeout(() => {
+      setDebouncedUsdAmount(usdAmount);
+    }, 150);
 
-    if (!Number.isFinite(currentUsdAmount) || currentUsdAmount <= 0 || !liveRate || !providers) {
-      setCalculationResults([]);
-      return;
-    }
-
-    const karbonResult = {
-      providerName: 'Karbon (Zero-Markup)',
-      offeredRate: liveRate,
-      markup: 0,
-      totalInr: calculateTotalInr(currentUsdAmount, liveRate),
-      savings: 0,
-      isBestSavings: false
+    return () => {
+      clearTimeout(handler);
     };
+  }, [usdAmount]);
+  
+  useEffect(() => {
+      const date = new Date();
+      date.setDate(date.getDate() + 1);
+      setDeliveryDate(date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' }));
+  }, []);
 
-    const competitorResults = providers.map(provider => {
-      const providerRate = Number(provider.rate);
-      if (!Number.isFinite(providerRate) || providerRate <= 0) {
-        return {
-          providerName: provider.name,
-          offeredRate: provider.rate,
-          markup: 0,
-          totalInr: 0,
-          savings: 0,
-          isBestSavings: false,
-        };
-      }
-      const totalInr = calculateTotalInr(currentUsdAmount, providerRate);
-      return {
-        providerName: provider.name,
-        offeredRate: providerRate,
-        markup: calculateMarkup(liveRate, providerRate),
-        totalInr: totalInr,
-        savings: calculateSavings(karbonResult.totalInr, totalInr),
-        isBestSavings: false,
-      };
-    });
-
-    const allResults = [karbonResult, ...competitorResults];
-    const validSavings = allResults.map(r => r.savings).filter(s => Number.isFinite(s));
-    const maxSavings = validSavings.length > 0 ? Math.max(...validSavings) : 0;
-    
-    if (maxSavings > 0) {
-      const bestSavingsIndex = allResults.findIndex(r => r.savings === maxSavings);
-      if (bestSavingsIndex !== -1) {
-        allResults[bestSavingsIndex].isBestSavings = true;
-      }
-    }
-    
-    setCalculationResults(allResults);
-
-  }, [usdAmount, useCustomLiveRate, customLiveRate, providers, liveRateData]);
-
-  const addNewProvider = () => {
-    append({ id: `custom-${Date.now()}`, name: '', rate: 0 });
+  const handleSliderChange = (value: number[]) => {
+    setUsdAmount(value[0]);
   };
   
-  const effectiveLiveRate = watchedValues.useCustomLiveRate ? watchedValues.customLiveRate : liveRateData?.rate;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const numValue = Number(value.replace(/[^0-9.]/g, ''));
+     if (Number.isFinite(numValue)) {
+      setUsdAmount(numValue);
+    }
+  }
+
+  const { totalInr, bankInr, cardInr } = useMemo(() => {
+    const currentRate = Number(liveRate);
+    const currentUsd = Number(debouncedUsdAmount);
+
+    if (!Number.isFinite(currentRate) || !Number.isFinite(currentUsd)) {
+      return { totalInr: 0, bankInr: 0, cardInr: 0 };
+    }
+
+    const calculatedTotalInr = currentUsd * currentRate;
+    const calculatedBankInr = calculatedTotalInr * (1 - 0.015);
+    const calculatedCardInr = calculatedTotalInr * (1 - 0.04);
+
+    return {
+      totalInr: calculatedTotalInr,
+      bankInr: calculatedBankInr,
+      cardInr: calculatedCardInr,
+    };
+  }, [debouncedUsdAmount, liveRate]);
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <Form {...form}>
-        <form>
-          <Card>
-            <CardHeader>
-              <CardTitle>FX Savings Calculator</CardTitle>
-              <CardDescription>Enter your transaction details to compare rates and calculate savings.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Section 1: Transaction Details */}
-              <div className="space-y-4">
-                <div className="grid sm:grid-cols-2 gap-6">
-                  <FormField
-                    control={form.control}
-                    name="usdAmount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>USD Amount to Convert</FormLabel>
-                        <FormControl>
-                          <Input type="number" placeholder="e.g., 1000" {...field} value={field.value ?? ''} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <FormLabel htmlFor="live-rate">Live Rate (USD to INR)</FormLabel>
-                      {isLoadingRate && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-                      {apiError && <AlertTriangle className="h-4 w-4 text-destructive" />}
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="customLiveRate"
-                      render={({ field }) => (
-                        <FormItem className="relative">
-                          <FormControl>
-                            <Input
-                                id="live-rate"
-                                type="number"
-                                step="any"
-                                placeholder={isLoadingRate ? "Fetching..." : "Enter rate"}
-                                {...field}
-                                value={field.value ?? ''}
-                                disabled={!watchedValues.useCustomLiveRate}
-                            />
-                          </FormControl>
-                          <FormMessage className="absolute" />
-                        </FormItem>
-                      )}
-                    />
-                    {liveRateData && !watchedValues.useCustomLiveRate && (
-                       <p className="text-xs text-muted-foreground">
-                         Last updated: {new Date(liveRateData.timestamp).toLocaleString()}
-                       </p>
-                    )}
-                  </div>
-                </div>
-                <FormField
-                  control={form.control}
-                  name="useCustomLiveRate"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                      <div className="space-y-0.5">
-                        <FormLabel>Override Live Rate</FormLabel>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
+    <div className="w-full max-w-md mx-auto bg-[#f4f6fa] rounded-2xl shadow-md p-6 font-sans">
+      <div className="space-y-6">
+        {/* Top Section */}
+        <div>
+          <p className="text-sm text-[#667085] mb-2">Your client pays</p>
+          <div className="relative">
+             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <UsdFlag />
+            </div>
+            <input 
+              type="text"
+              value={`$ ${new Intl.NumberFormat('en-US').format(usdAmount)}`}
+              onChange={handleInputChange}
+              className="w-full pl-12 pr-4 py-2 text-2xl font-semibold text-[#101828] bg-white rounded-md border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+            />
+          </div>
+          <Slider
+            value={[usdAmount]}
+            onValueChange={handleSliderChange}
+            min={500}
+            max={100000}
+            step={500}
+            className="mt-4"
+          />
+        </div>
 
-              <Separator />
-
-              {/* Section 2: Competitor Rates */}
-              <div className="space-y-4">
-                 <h3 className="text-lg font-medium">Competitor Rates</h3>
-                {fields.map((field, index) => (
-                  <div key={field.id} className="grid grid-cols-12 gap-2 items-start">
-                    <FormField
-                      control={form.control}
-                      name={`providers.${index}.name`}
-                      render={({ field: nameField }) => (
-                        <FormItem className="col-span-12 sm:col-span-5">
-                          <FormLabel className="sr-only">Provider Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Provider Name" {...nameField} value={nameField.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name={`providers.${index}.rate`}
-                      render={({ field: rateField }) => (
-                        <FormItem className="col-span-10 sm:col-span-6">
-                           <FormLabel className="sr-only">Provider Rate</FormLabel>
-                          <FormControl>
-                            <Input type="number" step="any" placeholder="Exchange Rate" {...rateField} value={rateField.value ?? ''} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <Button variant="ghost" size="icon" onClick={() => remove(index)} className="col-span-2 sm:col-span-1 text-muted-foreground hover:text-destructive">
-                      <Trash2 className="h-4 w-4" />
-                      <span className="sr-only">Remove Provider</span>
-                    </Button>
-                  </div>
-                ))}
-                <Button type="button" variant="outline" onClick={addNewProvider}>
-                  <PlusCircle className="mr-2 h-4 w-4" /> Add Provider
-                </Button>
-              </div>
-
-              <Separator />
-
-              {/* Section 3: Calculation Results */}
-              <div>
-                <h3 className="text-lg font-medium">Calculation Results</h3>
-                 <p className="text-sm text-muted-foreground mb-4">
-                    Here's the breakdown of how much you'd receive and save.
-                    {watchedValues.useCustomLiveRate && " (Using user-provided live rate)"}
-                  </p>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Provider</TableHead>
-                        <TableHead className="text-right">Offered Rate</TableHead>
-                        <TableHead className="text-right">Markup</TableHead>
-                        <TableHead className="text-right">Total INR Received</TableHead>
-                        <TableHead className="text-right">Savings vs Karbon</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {calculationResults.length > 0 ? (
-                        calculationResults.map((result) => {
-                          const offeredRateNum = Number(result.offeredRate);
-                          const offeredRateStr = Number.isFinite(offeredRateNum) ? offeredRateNum.toFixed(4) : "—";
-                          const markupNum = Number(result.markup);
-                          const markupStr = Number.isFinite(markupNum) ? markupNum.toFixed(4) : "—";
-
-                          return (
-                            <TableRow key={result.providerName} className={cn(result.isBestSavings && "bg-accent/20")}>
-                              <TableCell className="font-medium">{result.providerName}</TableCell>
-                              <TableCell className="text-right">{offeredRateStr}</TableCell>
-                              <TableCell className={cn("text-right", result.markup < 0 && "text-green-600", result.markup > 0 && "text-destructive")}>
-                                {markupStr}
-                              </TableCell>
-                              <TableCell className="text-right font-semibold">{formatAsINR(result.totalInr)}</TableCell>
-                              <TableCell className={cn("text-right font-bold", result.isBestSavings && "text-primary")}>
-                                {formatAsINR(result.savings)}
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })
-                      ) : (
-                         <TableRow>
-                          <TableCell colSpan={5} className="text-center text-muted-foreground h-24">
-                              {(!effectiveLiveRate || !watchedValues.usdAmount) ? "Enter transaction details to see results." : "No results to display."}
-                          </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </form>
-      </Form>
+        {/* Middle Section */}
+        <div className="flex items-center justify-center space-x-2 text-sm text-[#667085]">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+          <span>Live Forex, 0 Margin</span>
+          <span className="font-semibold text-[#101828]">
+            ₹{liveRate ? liveRate.toFixed(4) : '...'}
+          </span>
+        </div>
+        
+        {/* Bottom Section */}
+        <div className="bg-white rounded-lg p-4 space-y-4">
+          <div>
+            <p className="text-sm text-[#667085]">You will receive</p>
+            <p className="text-3xl font-semibold text-[#101828]">{formatAsINR(totalInr)}</p>
+            <Badge className="mt-2 bg-[#F9F5FF] text-[#5b3bee] font-medium hover:bg-[#F4EBFF]">
+              By {deliveryDate}, Within 24 hours
+            </Badge>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="bg-[#f4f6fa] rounded-md p-3">
+              <p className="text-xs text-[#667085]">Banks</p>
+              <p className="text-lg font-semibold text-[#101828]">{formatAsINR(bankInr)}</p>
+              <p className="text-xs text-red-600">Pays 1.5% less ↓</p>
+            </div>
+            <div className="bg-[#f4f6fa] rounded-md p-3">
+              <p className="text-xs text-[#667085]">Cards</p>
+              <p className="text-lg font-semibold text-[#101828]">{formatAsINR(cardInr)}</p>
+               <p className="text-xs text-red-600">Pays 4% less ↓</p>
+            </div>
+          </div>
+           <p className="text-xs text-[#667085] text-center pt-2">You save 1-5% more compared to Banks & Cards</p>
+        </div>
+      </div>
     </div>
   );
 }

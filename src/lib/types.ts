@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+// This file can be removed or repurposed as it's no longer used by the compact FxCalculatorCard.
+// Keeping it for now to avoid breaking imports if other components depend on it.
+
 export const providerSchema = z.object({
   id: z.string(),
   name: z.string().min(1, { message: "Provider name cannot be empty." }),
