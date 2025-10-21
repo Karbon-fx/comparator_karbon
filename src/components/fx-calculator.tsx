@@ -145,7 +145,6 @@ export default function FxCalculator() {
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
       <header className="text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-primary font-headline">FX Savings Ace</h1>
         <p className="mt-2 text-lg text-muted-foreground">
           Compare USD to INR currency exchange rates and see your savings.
         </p>
