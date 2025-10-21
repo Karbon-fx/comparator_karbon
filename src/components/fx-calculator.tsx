@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { PlusCircle, Trash2, Loader2, AlertTriangle } from 'lucide-react';
@@ -46,6 +46,12 @@ export default function FxCalculator() {
   });
   
   const watchedValues = form.watch();
+  
+  // Memoize watched values to prevent unnecessary re-renders in useEffect
+  const usdAmount = watchedValues.usdAmount;
+  const useCustomLiveRate = watchedValues.useCustomLiveRate;
+  const customLiveRate = watchedValues.customLiveRate;
+  const providers = watchedValues.providers;
 
   useEffect(() => {
     async function fetchLiveRate() {
@@ -76,7 +82,6 @@ export default function FxCalculator() {
   }, [toast, form]);
 
   useEffect(() => {
-    const { usdAmount, useCustomLiveRate, customLiveRate, providers } = watchedValues;
     const liveRate = useCustomLiveRate ? customLiveRate : liveRateData?.rate;
 
     if (!usdAmount || !liveRate || !providers) {
@@ -117,7 +122,7 @@ export default function FxCalculator() {
     
     setCalculationResults(allResults);
 
-  }, [watchedValues, liveRateData, form]);
+  }, [usdAmount, useCustomLiveRate, customLiveRate, providers, liveRateData]);
 
   const addNewProvider = () => {
     append({ id: `custom-${Date.now()}`, name: '', rate: 0 });
