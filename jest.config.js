@@ -11,4 +11,7 @@ module.exports = {
       tsconfig: 'tsconfig.test.json'
     }],
   },
+  transformIgnorePatterns: [
+    "node_modules/(?!(some-es-module-package)/)"
+  ],
 };

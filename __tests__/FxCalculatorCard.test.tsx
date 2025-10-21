@@ -48,4 +48,34 @@ describe('FxCalculatorCard with Table', () => {
       expect(updatedSavingsCell).toBeInTheDocument();
     }, { timeout: 1000 });
   });
+
+  it('syncs USD input with slider and clamps values', async () => {
+    render(<FxCalculatorCard />);
+
+    const usdInput = screen.getByLabelText('USD Amount');
+    const slider = screen.getByRole('slider');
+
+    // Type in input, check slider
+    fireEvent.change(usdInput, { target: { value: '50000' } });
+    await waitFor(() => {
+      expect(slider).toHaveValue('50000');
+    });
+
+    // Type out of bounds value
+    fireEvent.change(usdInput, { target: { value: '50' } });
+    fireEvent.blur(usdInput);
+    await waitFor(() => {
+      expect(usdInput).toHaveValue('100');
+      expect(slider).toHaveValue('100');
+      expect(screen.getByText('Minimum is $100')).toBeInTheDocument();
+    });
+    
+    fireEvent.change(usdInput, { target: { value: '120000' } });
+    fireEvent.blur(usdInput);
+    await waitFor(() => {
+      expect(usdInput).toHaveValue('100,000');
+      expect(slider).toHaveValue('100000');
+      expect(screen.getByText('Maximum is $100,000')).toBeInTheDocument();
+    });
+  });
 });

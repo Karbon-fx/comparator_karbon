@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { formatRate, toNumberSafe, calculateMarkup, calculateTotalInr, calculateSavings } from '@/lib/calculations';
-import { cn, formatAsINR } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate, formatAsINR } from '@/lib/utils';
+import { sanitizeRateOfferedInput } from '@/lib/inputSanitizers';
+import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
 const UsdFlag = () => (
@@ -23,6 +25,11 @@ type ProviderRates = {
     paypal: string;
 };
 
+type RateError = {
+    bank?: string;
+    paypal?: string;
+};
+
 export default function FxCalculatorCard() {
   const [usdAmount, setUsdAmount] = useState<number>(1000);
   const [liveRate, setLiveRate] = useState<number | null>(null);
@@ -34,6 +41,10 @@ export default function FxCalculatorCard() {
     paypal: '85.3107',
   });
   const [debouncedProviderRates, setDebouncedProviderRates] = useState(providerRates);
+  const [highlightedRow, setHighlightedRow] = useState<string | null>(null);
+  const [rateErrors, setRateErrors] = useState<RateError>({});
+  const [usdInputError, setUsdInputError] = useState<string | null>(null);
+
 
   useEffect(() => {
     const fetchLiveRate = async () => {
@@ -54,29 +65,60 @@ export default function FxCalculatorCard() {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedUsdAmount(usdAmount);
-      setDebouncedProviderRates(providerRates);
+    }, 150);
+
+    return () => clearTimeout(handler);
+  }, [usdAmount]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+        setDebouncedProviderRates(providerRates);
     }, 200);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [usdAmount, providerRates]);
+    return () => clearTimeout(handler);
+  }, [providerRates]);
 
   const handleSliderChange = (value: number[]) => {
     setUsdAmount(value[0]);
+    setUsdInputError(null);
   };
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const numValue = Number(value.replace(/[^0-9.]/g, ''));
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
      if (Number.isFinite(numValue)) {
       setUsdAmount(numValue);
+      setUsdInputError(null);
     }
   }
 
+  const handleInputBlur = () => {
+    let clampedValue = usdAmount;
+    if (clampedValue < 100) {
+      clampedValue = 100;
+      setUsdInputError("Minimum is $100");
+    } else if (clampedValue > 100000) {
+      clampedValue = 100000;
+      setUsdInputError("Maximum is $100,000");
+    }
+    setUsdAmount(clampedValue);
+  };
+  
   const handleProviderRateChange = (provider: keyof ProviderRates, value: string) => {
-    if (/^\d*\.?\d*$/.test(value)) {
-        setProviderRates(prev => ({ ...prev, [provider]: value }));
+    const sanitizedValue = sanitizeRateOfferedInput(value);
+    setProviderRates(prev => ({ ...prev, [provider]: sanitizedValue }));
+    
+    // Highlight the row for 600ms
+    setHighlightedRow(provider);
+    setTimeout(() => setHighlightedRow(null), 600);
+  };
+  
+  const handleRateBlur = (provider: keyof ProviderRates) => {
+    const rate = providerRates[provider];
+    if (rate === '' || !Number.isFinite(Number(rate))) {
+      setRateErrors(prev => ({...prev, [provider]: 'A valid rate is required.'}));
+    } else {
+       setRateErrors(prev => ({...prev, [provider]: undefined}));
     }
   };
 
@@ -114,6 +156,12 @@ export default function FxCalculatorCard() {
     };
   }, [debouncedUsdAmount, liveRate, debouncedProviderRates]);
 
+  const sliderFillPercent = useMemo(() => {
+    const min = 100;
+    const max = 100000;
+    return ((usdAmount - min) / (max - min)) * 100;
+  }, [usdAmount]);
+
 
   return (
     <div className="w-full max-w-4xl mx-auto bg-[#f4f6fa] rounded-2xl shadow-md p-6 font-sans">
@@ -121,91 +169,120 @@ export default function FxCalculatorCard() {
         <div>
           <p className="text-sm text-[#667085] mb-2">Your client pays</p>
           <div className="relative">
-             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none gap-2">
               <UsdFlag />
+              <span className="text-lg font-semibold text-gray-500">$</span>
             </div>
             <input 
               type="text"
-              value={`$ ${new Intl.NumberFormat('en-US').format(usdAmount)}`}
+              value={`${new Intl.NumberFormat('en-US').format(usdAmount)}`}
               onChange={handleInputChange}
-              className="w-full pl-12 pr-4 py-2 text-2xl font-semibold text-[#101828] bg-white rounded-md border border-gray-200 focus:ring-2 focus:ring-primary focus:outline-none"
+              onBlur={handleInputBlur}
+              className="w-full pl-16 pr-4 py-2 text-lg font-semibold text-[#101828] bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-500/10"
+              aria-label="USD Amount"
             />
           </div>
-          <Slider
-            value={[usdAmount]}
-            onValueChange={handleSliderChange}
-            min={500}
-            max={100000}
-            step={500}
-            className="mt-4"
-          />
+          {usdInputError && <p className="text-xs text-red-600 mt-1">{usdInputError}</p>}
+          
+          <div className="mt-4 px-1">
+            <Slider
+              value={[usdAmount]}
+              onValueChange={handleSliderChange}
+              min={100}
+              max={100000}
+              step={100}
+              aria-valuemin={100}
+              aria-valuemax={100000}
+              aria-valuenow={usdAmount}
+              style={{ '--fill-percent': `${sliderFillPercent}%` } as React.CSSProperties}
+              className="[&>span:first-child]:bg-gradient-to-r [&>span:first-child]:from-[#145aff] [&>span:first-child]:to-[#145aff] [&>span:first-child]:bg-no-repeat [&>span:first-child]:bg-[length:var(--fill-percent)_100%]"
+            />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+                <span>100</span>
+                <span>50K</span>
+                <span>100K</span>
+            </div>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead className="w-1/4 font-semibold text-left text-[#101828]">Description</TableHead>
-                        <TableHead className="text-center font-semibold text-[#101828]">Karbon (zero-markup)</TableHead>
-                        <TableHead className="text-center font-semibold text-[#101828]">Bank</TableHead>
-                        <TableHead className="text-center font-semibold text-[#101828]">PayPal</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Amount to be converted in USD</TableCell>
-                        <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                        <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                        <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Live Rates as on {lastUpdated || '...'}</TableCell>
-                        <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
-                        <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
-                        <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Rate Offered</TableCell>
-                        <TableCell className="text-center">{formatRate(karbon.offeredRate)}</TableCell>
-                        <TableCell>
-                            <Input 
-                                type="text"
-                                value={providerRates.bank ?? ''}
-                                onChange={(e) => handleProviderRateChange('bank', e.target.value)}
-                                className="text-center bg-white"
-                                inputMode="decimal"
-                            />
-                        </TableCell>
-                         <TableCell>
-                            <Input 
-                                type="text"
-                                value={providerRates.paypal ?? ''}
-                                onChange={(e) => handleProviderRateChange('paypal', e.target.value)}
-                                className="text-center bg-white"
-                                inputMode="decimal"
-                            />
-                        </TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Markup</TableCell>
-                        <TableCell className="text-center">0.0000</TableCell>
-                        <TableCell className={cn("text-center", Number.isFinite(bank.markup) && bank.markup < 0 ? 'text-green-600' : 'text-red-600')}>{formatRate(bank.markup)}</TableCell>
-                        <TableCell className={cn("text-center", Number.isFinite(paypal.markup) && paypal.markup < 0 ? 'text-green-600' : 'text-red-600')}>{formatRate(paypal.markup)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Total INR received</TableCell>
-                        <TableCell className="text-center font-bold">{formatAsINR(karbon.totalInr)}</TableCell>
-                        <TableCell className="text-center">{formatAsINR(bank.totalInr)}</TableCell>
-                        <TableCell className="text-center">{formatAsINR(paypal.totalInr)}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell className="font-medium text-[#667085]">Savings with Karbon</TableCell>
-                        <TableCell className="text-center font-bold text-green-600">{formatAsINR(0)}</TableCell>
-                        <TableCell className="text-center font-bold text-green-600">{formatAsINR(bank.savings)}</TableCell>
-                        <TableCell className="text-center font-bold text-green-600">{formatAsINR(paypal.savings)}</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+            <TooltipProvider>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="w-1/4 font-semibold text-left text-[#101828]">Description</TableHead>
+                            <TableHead className="text-center font-semibold text-[#101828]">Karbon (zero-markup)</TableHead>
+                            <TableHead className="text-center font-semibold text-[#101828]">Bank</TableHead>
+                            <TableHead className="text-center font-semibold text-[#101828]">PayPal</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">Amount to convert (USD)</TableCell>
+                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">Live Rates as on {lastUpdated || '...'}</TableCell>
+                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">Rate Offered</TableCell>
+                            <TableCell className="text-center">{formatRate(karbon.offeredRate)}</TableCell>
+                            <TableCell>
+                                <Input 
+                                    type="text"
+                                    value={providerRates.bank ?? ''}
+                                    onChange={(e) => handleProviderRateChange('bank', e.target.value)}
+                                    onBlur={() => handleRateBlur('bank')}
+                                    className={cn("text-center bg-white", rateErrors.bank && "border-red-300 focus:ring-red-500/20")}
+                                    inputMode="decimal"
+                                    aria-label="Bank offered rate"
+                                />
+                                {rateErrors.bank && <p className="text-xs text-red-600 mt-1">{rateErrors.bank}</p>}
+                            </TableCell>
+                            <TableCell>
+                                <Input 
+                                    type="text"
+                                    value={providerRates.paypal ?? ''}
+                                    onChange={(e) => handleProviderRateChange('paypal', e.target.value)}
+                                    onBlur={() => handleRateBlur('paypal')}
+                                    className={cn("text-center bg-white", rateErrors.paypal && "border-red-300 focus:ring-red-500/20")}
+                                    inputMode="decimal"
+                                    aria-label="PayPal offered rate"
+                                />
+                                {rateErrors.paypal && <p className="text-xs text-red-600 mt-1">{rateErrors.paypal}</p>}
+                            </TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">
+                                <Tooltip>
+                                    <TooltipTrigger className="cursor-help">Markup</TooltipTrigger>
+                                    <TooltipContent>liveRate - offeredRate</TooltipContent>
+                                </Tooltip>
+                            </TableCell>
+                            <TableCell className="text-center">0.0000</TableCell>
+                            <TableCell className={cn("text-center transition-colors duration-500", Number.isFinite(bank.markup) && bank.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatRate(bank.markup)}</TableCell>
+                            <TableCell className={cn("text-center transition-colors duration-500", Number.isFinite(paypal.markup) && paypal.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatRate(paypal.markup)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">Total INR received</TableCell>
+                            <TableCell className="text-center font-bold">{formatAsINR(karbon.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center transition-colors duration-500", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center transition-colors duration-500", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.totalInr)}</TableCell>
+                        </TableRow>
+                        <TableRow>
+                            <TableCell className="font-medium text-[#667085]">Savings with Karbon</TableCell>
+                            <TableCell className="text-center font-bold text-green-600">{formatAsINR(0)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 transition-colors duration-500", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.savings)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 transition-colors duration-500", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.savings)}</TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </TooltipProvider>
         </div>
       </div>
     </div>
