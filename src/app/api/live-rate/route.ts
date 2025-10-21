@@ -40,6 +40,10 @@ export async function GET() {
         { status: 502 }
       );
     }
+    
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('Live rate fetched:', inrRate);
+    }
 
     return NextResponse.json({
       rate: inrRate,
