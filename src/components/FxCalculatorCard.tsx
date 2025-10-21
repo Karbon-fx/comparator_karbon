@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Slider } from '@/components/ui/slider';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -46,7 +46,6 @@ export default function FxCalculatorCard() {
   const [rateErrors, setRateErrors] = useState<RateError>({});
   const [usdInputError, setUsdInputError] = useState<string | null>(null);
 
-
   useEffect(() => {
     const fetchLiveRate = async () => {
       try {
@@ -89,30 +88,30 @@ export default function FxCalculatorCard() {
     const numValue = Number(value.replace(/[^0-9]/g, ''));
     if (numValue > 100000) {
         setUsdAmount(100000);
-        setUsdInputError("Maximum is $100,000");
     } else if (Number.isFinite(numValue)) {
       setUsdAmount(numValue);
-      setUsdInputError(null);
     }
+     setUsdInputError(null);
   }
 
   const handleInputBlur = () => {
     let clampedValue = usdAmount;
+    let error = null;
     if (clampedValue < 100) {
       clampedValue = 100;
-      setUsdInputError("Minimum is $100");
+      error = "Minimum is $100";
     } else if (clampedValue > 100000) {
       clampedValue = 100000;
-      setUsdInputError("Maximum is $100,000");
+      error = "Maximum is $100,000";
     }
     setUsdAmount(clampedValue);
+    setUsdInputError(error);
   };
   
   const handleProviderRateChange = (provider: keyof ProviderRates, value: string) => {
     const sanitizedValue = sanitizeRateOfferedInput(value);
     setProviderRates(prev => ({ ...prev, [provider]: sanitizedValue }));
     
-    // Highlight the row for 600ms
     setHighlightedRow(provider);
     setTimeout(() => setHighlightedRow(null), 600);
   };
@@ -168,7 +167,7 @@ export default function FxCalculatorCard() {
 
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-[#f4f6fa] rounded-2xl shadow-md p-6 font-sans">
+    <div className="w-full max-w-4xl mx-auto bg-[#f4f6fa] rounded-2xl shadow-md p-6 md:p-8 font-sans">
       <div className="space-y-6">
         <div>
           <p className="text-sm text-[#667085] mb-2">Your client pays</p>
@@ -202,9 +201,9 @@ export default function FxCalculatorCard() {
               className="[&>span:first-child]:bg-gradient-to-r [&>span:first-child]:from-[#145aff] [&>span:first-child]:to-[#145aff] [&>span:first-child]:bg-no-repeat [&>span:first-child]:bg-[length:var(--fill-percent)_100%]"
             />
             <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>100</span>
-                <span>50K</span>
-                <span>100K</span>
+                <span>$100</span>
+                <span>$50K</span>
+                <span>$100K</span>
             </div>
           </div>
         </div>
@@ -213,76 +212,81 @@ export default function FxCalculatorCard() {
             <TooltipProvider>
                 <Table>
                     <TableHeader>
-                        <TableRow>
-                            <TableHead className="w-1/4 font-semibold text-left text-[#101828]">Description</TableHead>
-                            <TableHead className="text-center font-semibold text-[#101828]">Karbon (zero-markup)</TableHead>
-                            <TableHead className="text-center font-semibold text-[#101828]">Bank</TableHead>
-                            <TableHead className="text-center font-semibold text-[#101828]">PayPal</TableHead>
+                        <TableRow className="hover:bg-transparent">
+                            <TableHead className="w-1/4 font-semibold text-left text-[#101828] p-2">Description</TableHead>
+                            <TableHead className="text-center font-semibold text-[#145aff] p-2">Karbon (zero-markup)</TableHead>
+                            <TableHead className="text-center font-semibold text-[#101828] p-2">Bank</TableHead>
+                            <TableHead className="text-center font-semibold text-[#101828] p-2">PayPal</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">Amount to convert (USD)</TableCell>
-                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                            <TableCell className="text-center">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                        <TableRow className="odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-medium text-[#667085] p-3">Amount to convert (USD)</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">Live Rates as on {lastUpdated || '...'}</TableCell>
-                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
-                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
-                            <TableCell className="text-center">{formatRate(liveRate)}</TableCell>
+
+                        <TableRow className="odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-medium text-[#667085] p-3">Live Rates as on {lastUpdated || '...'}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">Rate Offered</TableCell>
-                            <TableCell className="text-center">{formatRate(karbon.offeredRate)}</TableCell>
-                            <TableCell>
+                        
+                        <TableRow className="border-t border-b border-gray-200/80 my-4 odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-medium text-[#667085] p-3">Rate Offered</TableCell>
+                            <TableCell className="text-center font-semibold text-gray-800 tabular-nums p-3">{formatRate(karbon.offeredRate)}</TableCell>
+                            <TableCell className="p-2">
                                 <Input 
                                     type="text"
                                     value={providerRates.bank ?? ''}
                                     onChange={(e) => handleProviderRateChange('bank', e.target.value)}
                                     onBlur={() => handleRateBlur('bank')}
-                                    className={cn("text-center bg-white", rateErrors.bank && "border-red-300 focus:ring-red-500/20")}
+                                    className={cn("text-center bg-white tabular-nums", rateErrors.bank && "border-red-300 focus:ring-red-500/20")}
                                     inputMode="decimal"
                                     aria-label="Bank offered rate"
                                 />
-                                {rateErrors.bank && <p className="text-xs text-red-600 mt-1">{rateErrors.bank}</p>}
+                                {rateErrors.bank && <p className="text-xs text-red-600 mt-1 text-center">{rateErrors.bank}</p>}
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="p-2">
                                 <Input 
                                     type="text"
                                     value={providerRates.paypal ?? ''}
                                     onChange={(e) => handleProviderRateChange('paypal', e.target.value)}
                                     onBlur={() => handleRateBlur('paypal')}
-                                    className={cn("text-center bg-white", rateErrors.paypal && "border-red-300 focus:ring-red-500/20")}
+                                    className={cn("text-center bg-white tabular-nums", rateErrors.paypal && "border-red-300 focus:ring-red-500/20")}
                                     inputMode="decimal"
                                     aria-label="PayPal offered rate"
                                 />
-                                {rateErrors.paypal && <p className="text-xs text-red-600 mt-1">{rateErrors.paypal}</p>}
+                                {rateErrors.paypal && <p className="text-xs text-red-600 mt-1 text-center">{rateErrors.paypal}</p>}
                             </TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">
+
+                        <TableRow className="odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-medium text-[#667085] p-3">
                                 <Tooltip>
-                                    <TooltipTrigger className="cursor-help">Markup</TooltipTrigger>
+                                    <TooltipTrigger className="cursor-help underline decoration-dotted">Markup</TooltipTrigger>
                                     <TooltipContent>liveRate - offeredRate</TooltipContent>
                                 </Tooltip>
                             </TableCell>
-                            <TableCell className="text-center">0.0000</TableCell>
-                            <TableCell className={cn("text-center transition-colors duration-500", Number.isFinite(bank.markup) && bank.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatRate(bank.markup)}</TableCell>
-                            <TableCell className={cn("text-center transition-colors duration-500", Number.isFinite(paypal.markup) && paypal.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatRate(paypal.markup)}</TableCell>
+                            <TableCell className="text-center tabular-nums text-gray-500 p-3">0.0000</TableCell>
+                            <TableCell className={cn("text-center tabular-nums transition-colors duration-500 p-3", Number.isFinite(bank.markup) && bank.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatRate(bank.markup)}</TableCell>
+                            <TableCell className={cn("text-center tabular-nums transition-colors duration-500 p-3", Number.isFinite(paypal.markup) && paypal.markup < 0 ? 'text-green-600' : 'text-red-600', highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatRate(paypal.markup)}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">Total INR received</TableCell>
-                            <TableCell className="text-center font-bold">{formatAsINR(karbon.totalInr)}</TableCell>
-                            <TableCell className={cn("text-center transition-colors duration-500", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.totalInr)}</TableCell>
-                            <TableCell className={cn("text-center transition-colors duration-500", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.totalInr)}</TableCell>
+                        
+                        <TableRow className="border-t-2 border-gray-200 odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-semibold text-[#101828] p-3 pt-5">Total INR received</TableCell>
+                            <TableCell className="text-center font-bold text-lg text-[#101828] tabular-nums p-3 pt-5">{formatAsINR(karbon.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center font-semibold text-gray-700 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center font-semibold text-gray-700 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.totalInr)}</TableCell>
                         </TableRow>
-                        <TableRow>
-                            <TableCell className="font-medium text-[#667085]">Savings with Karbon</TableCell>
-                            <TableCell className="text-center font-bold text-green-600">{formatAsINR(0)}</TableCell>
-                            <TableCell className={cn("text-center font-bold text-green-600 transition-colors duration-500", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.savings)}</TableCell>
-                            <TableCell className={cn("text-center font-bold text-green-600 transition-colors duration-500", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.savings)}</TableCell>
+
+                        <TableRow className="odd:bg-white even:bg-slate-50">
+                            <TableCell className="font-semibold text-[#101828] p-3">Savings with Karbon</TableCell>
+                            <TableCell className="text-center font-bold text-green-600 tabular-nums p-3">{formatAsINR(0)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 tabular-nums transition-colors duration-500 p-3", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.savings)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 tabular-nums transition-colors duration-500 p-3", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.savings)}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -292,3 +296,5 @@ export default function FxCalculatorCard() {
     </div>
   );
 }
+
+    
