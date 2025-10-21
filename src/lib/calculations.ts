@@ -1,35 +1,64 @@
 /**
+ * Safely converts a value to a number, returning NaN for invalid inputs.
+ * @param v - The value to convert.
+ * @returns A number or NaN.
+ */
+export function toNumberSafe(v: unknown): number {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : NaN;
+}
+
+/**
+ * Formats a number as a rate string with 4 decimal places.
+ * @param v - The number to format.
+ * @returns A formatted string or '—'.
+ */
+export function formatRate(v: number | null | undefined): string {
+    const n = toNumberSafe(v);
+    if (isNaN(n)) {
+        return '—';
+    }
+    return n.toFixed(4);
+}
+
+/**
  * Calculates the markup between the live rate and the rate offered by a provider.
+ * Returns NaN if inputs are invalid.
  * @param liveRate - The current market exchange rate.
  * @param offeredRate - The exchange rate offered by the provider.
- * @returns The markup value.
+ * @returns The markup value or NaN.
  */
 export function calculateMarkup(liveRate: number, offeredRate: number): number {
-  if (liveRate <= 0 || offeredRate <= 0) {
-    return 0;
+  if (isNaN(liveRate) || isNaN(offeredRate) || liveRate <= 0 || offeredRate <= 0) {
+    return NaN;
   }
   return liveRate - offeredRate;
 }
 
 /**
  * Calculates the total amount in INR received for a given USD amount and exchange rate.
+ * Returns NaN if inputs are invalid.
  * @param usdAmount - The amount in USD to be converted.
  * @param offeredRate - The exchange rate offered by the provider.
- * @returns The total amount in INR.
+ * @returns The total amount in INR or NaN.
  */
 export function calculateTotalInr(usdAmount: number, offeredRate: number): number {
-  if (usdAmount <= 0 || offeredRate <= 0) {
-    return 0;
+  if (isNaN(usdAmount) || isNaN(offeredRate) || usdAmount <= 0 || offeredRate <= 0) {
+    return NaN;
   }
   return usdAmount * offeredRate;
 }
 
 /**
  * Calculates the savings achieved by using Karbon compared to another provider.
+ * Returns NaN if inputs are invalid.
  * @param karbonTotalInr - The total INR received if using Karbon.
  * @param providerTotalInr - The total INR received if using the other provider.
- * @returns The savings amount in INR.
+ * @returns The savings amount in INR or NaN.
  */
 export function calculateSavings(karbonTotalInr: number, providerTotalInr: number): number {
+  if (isNaN(karbonTotalInr) || isNaN(providerTotalInr)) {
+    return NaN;
+  }
   return karbonTotalInr - providerTotalInr;
 }
