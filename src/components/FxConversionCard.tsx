@@ -224,7 +224,7 @@ export default function FxConversionCard() {
   const providers = useMemo(() => [
       { id: 'karbon', name: 'Karbon (zero-markup)', logo: 'https://cdn.prod.website-files.com/670ceff4b2fa1be44c3929a5/67936f1eab8fdd86f27b9e5c_Karbon%20Card%20Logo%201.svg', rate: liveRate, isEditable: false },
       { id: 'bank', name: 'Bank', logo: 'https://placehold.co/24x24/7C859F/FFFFFF/png?text=B', rate: debouncedProviderRates.bank, isEditable: true },
-      { id: 'paypal', name: 'PayPal', logo: 'https://placehold.co/24x24/0070BA/FFFFFF/png?text=P', rate: debouncedProviderRates.paypal, isEditable: true },
+      { id: 'paypal', name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg', rate: debouncedProviderRates.paypal, isEditable: true },
   ], [liveRate, debouncedProviderRates]);
 
   const allSavings = useMemo(() => {
