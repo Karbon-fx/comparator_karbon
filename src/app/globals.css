@@ -18,7 +18,7 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
-    --primary: 213 94% 50%; /* Deep Sky Blue */
+    --primary: 222 94% 50%; 
     --primary-foreground: 210 40% 98%;
     
     --secondary: 240 5% 96%;
@@ -27,7 +27,7 @@ body {
     --muted: 240 5% 65%;
     --muted-foreground: 240 5% 45%;
     
-    --accent: 180 100% 50%; /* Cyan */
+    --accent: 222 94% 50%;
     --accent-foreground: 222 47% 11%;
     
     --destructive: 0 84% 60%;
@@ -35,15 +35,15 @@ body {
     
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 213 94% 50%;
+    --ring: 222 94% 50%;
     
     --radius: 0.75rem;
 
     /* FX Savings Ace Custom Tokens */
     --karbon-primary: #101828;
-    --karbon-accent: #43A6FF;
-    --card-bg: #FFFFFF;
-    --card-surface: #F5F5F5;
+    --karbon-accent: #145aff;
+    --card-bg: #f4f6fa;
+    --card-surface: #FFFFFF;
     --success: #059669;
     --danger: #ef4444;
   }
@@ -70,7 +70,7 @@ body {
     --ring: 213 94% 68%;
     
     --karbon-primary: #ffffff;
-    --karbon-accent: #43A6FF;
+    --karbon-accent: #145aff;
     --card-bg: #101828;
     --card-surface: #1a2233;
     --success: #10B981;
@@ -90,3 +90,4 @@ body {
     font-feature-settings: "tnum";
   }
 }
+

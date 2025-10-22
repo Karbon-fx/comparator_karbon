@@ -8,7 +8,6 @@
  */
 export function sanitizeRateOfferedInput(v: string): string {
   if (v === null || v === undefined) return '';
-  // Remove everything except digits and the first dot
   let s = v.toString().replace(/[^\d.]/g, '');
   const parts = s.split('.');
   if (parts.length > 2) {
@@ -29,10 +28,12 @@ export function sanitizeRateOfferedInput(v: string): string {
 
 /**
  * Sanitizes and parses a USD display string.
+ * It formats the number with commas for display and returns the raw numeric value.
  * @param v The display string, which may contain commas.
  * @returns An object with the cleaned display string (with commas) and the parsed numeric value.
  */
 export function sanitizeUsdDisplay(v: string): { display: string; numeric: number } {
+    if (v === '') return { display: '', numeric: 0 };
     const numeric = Number(v.replace(/[^0-9]/g, ''));
     if (!Number.isFinite(numeric)) {
         return { display: '', numeric: 0 };

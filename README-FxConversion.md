@@ -12,9 +12,9 @@ This project is built with:
 The styling uses CSS variables defined in `src/app/globals.css` which can be customized.
 
 - `--karbon-primary: #101828`
-- `--karbon-accent: #43A6FF`
-- `--card-bg: #FFFFFF`
-- `--card-surface: #F5F5F5`
+- `--karbon-accent: #145aff`
+- `--card-bg: #f4f6fa`
+- `--card-surface: #FFFFFF`
 - `--success: #059669`
 - `--danger: #ef4444`
 
@@ -62,3 +62,13 @@ npm test
 - `__tests__/calc.test.ts`: Contains unit tests for the core calculation functions.
 - `__tests__/inputSanitizers.test.ts`: Tests the input sanitization logic for rates and USD amounts.
 - `__tests__/FxConversionCard.ui.test.tsx`: Contains a React Testing Library test for the main component.
+
+## QA Checklist
+
+- [ ] Verify the main USD input accepts numbers and commas, and clamps values between 100 and 100,000 on blur.
+- [ ] Verify the table displays Karbon, Bank, and PayPal as rows.
+- [ ] Verify the "Rate Offered" cell for Bank and PayPal is editable.
+- [ ] Verify editing the "Rate Offered" updates the "Markup", "Total INR", and "Savings" columns in that row.
+- [ ] Verify that entering more than 3 integer digits (e.g., "1000.00") in "Rate Offered" is prevented or sanitized.
+- [ ] Verify that the component is responsive and switches to a stacked card view on mobile screens.
+- [ ] Verify no console errors (especially React warnings about controlled/uncontrolled inputs) appear during interaction.
