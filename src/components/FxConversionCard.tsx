@@ -85,7 +85,7 @@ const ProviderRow = ({ provider, usdAmount, liveRate, karbonInr, onRateChange, o
   return (
     <TableRow className={cn("transition-colors duration-500", isHighlighted && "bg-blue-100/50")}>
       <TableCell className="font-semibold text-karbon-primary flex items-center gap-3">
-        {logo && typeof logo === 'string' && logo.startsWith('http') ? <Image src={logo} alt={`${name} logo`} width={24} height={24} /> : logo}
+        {logo && typeof logo === 'string' ? <Image src={logo} alt={`${name} logo`} width={24} height={24} /> : logo}
         {name}
       </TableCell>
       <TableCell className="text-center tabular-nums text-primary font-medium">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
@@ -223,7 +223,7 @@ export default function FxConversionCard() {
 
   const providers = useMemo(() => [
       { id: 'karbon', name: 'Karbon (zero-markup)', logo: 'https://cdn.prod.website-files.com/670ceff4b2fa1be44c3929a5/67936f1eab8fdd86f27b9e5c_Karbon%20Card%20Logo%201.svg', rate: liveRate, isEditable: false },
-      { id: 'bank', name: 'Bank', logo: <svg width="24" height="24" viewBox="0 0 100 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H16V40H0V0ZM40 12L50 4L60 12V16H40V12ZM42 18H58V20H42V18ZM42 22H58V24H42V22ZM38 28H62V32H38V28ZM36 34H64V38H36V34ZM66 0H81L100 40H85L81 28H70L66 40H51L66 0ZM78 22L76 16H74L72 22H78Z"/></svg>, rate: debouncedProviderRates.bank, isEditable: true },
+      { id: 'bank', name: 'Bank', logo: <svg width="28" height="28" viewBox="0 0 100 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M0 0H16V40H0V0ZM40 12L50 4L60 12V16H40V12ZM42 18H58V20H42V18ZM42 22H58V24H42V22ZM38 28H62V32H38V28ZM36 34H64V38H36V34ZM66 0H81L100 40H85L81 28H70L66 40H51L66 0ZM78 22L76 16H74L72 22H78Z"/></svg>, rate: debouncedProviderRates.bank, isEditable: true },
       { id: 'paypal', name: 'PayPal', logo: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg', rate: debouncedProviderRates.paypal, isEditable: true },
   ], [liveRate, debouncedProviderRates]);
 
