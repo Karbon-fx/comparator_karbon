@@ -254,15 +254,6 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-2 mt-6 text-sm">
-                    <motion.span animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 2 }} className="h-2 w-2 rounded-full bg-karbon-blue" />
-                    <span className="font-medium text-karbon-ebony">
-                        Live Rate as on {lastUpdated || 'Loading...'}
-                    </span>
-                    <motion.button whileHover={{ rotate: 180 }} whileTap={{ scale: 0.9 }} onClick={fetchLiveRate} disabled={isRefreshing} className="ml-2 p-1 rounded-md hover:bg-white transition-colors disabled:opacity-50">
-                        <RefreshCw className={`h-4 w-4 text-karbon-blue ${isRefreshing ? 'animate-spin' : ''}`} />
-                    </motion.button>
-                </div>
             </div>
 
             <div className="px-8 pb-8 pt-2 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
@@ -333,3 +324,4 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             </div>
         </div>
     );
+};
