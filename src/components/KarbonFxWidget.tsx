@@ -197,7 +197,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
             
 
-            <div className="px-8 pt-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pt-8 pb-2 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="mb-8">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
                         Amount to Convert
@@ -225,32 +225,6 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                                 </motion.button>
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <div className="relative px-2">
-                    <Slider
-                        value={[convertToLogScale(usdAmount)]}
-                        onValueChange={(value) => {
-                            const linearValue = convertFromLogScale(value[0]);
-                            setUsdAmount(Math.round(linearValue));
-                        }}
-                        min={convertToLogScale(100)}
-                        max={convertToLogScale(100000)}
-                        step={0.01}
-                        className="mb-6"
-                    />
-                    <div className="flex justify-between text-xs font-medium text-gray-500">
-                        {[500, 2000, 10000, 50000, 100000].map(val => (
-                             <motion.button
-                                key={val}
-                                whileHover={{ scale: 1.1, color: '#0066CC' }}
-                                onClick={() => setUsdAmount(val)}
-                                className="cursor-pointer hover:text-[#0066CC] transition-colors"
-                            >
-                                {val < 1000 ? `$${val}` : `$${val/1000}K`}
-                            </motion.button>
-                        ))}
                     </div>
                 </div>
 
