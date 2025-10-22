@@ -24,3 +24,17 @@ export function sanitizeRateOfferedInput(v: string): string {
 
   return decPart !== undefined ? `${sanitizedInt}.${sanitizedDec}` : sanitizedInt;
 }
+
+/**
+ * Sanitizes and parses a USD display string.
+ * @param v The display string, which may contain commas.
+ * @returns An object with the cleaned display string (with commas) and the parsed numeric value.
+ */
+export function sanitizeUsdDisplay(v: string): { display: string; numeric: number } {
+    const numeric = Number(v.replace(/[^0-9]/g, ''));
+    if (!Number.isFinite(numeric)) {
+        return { display: '', numeric: 0 };
+    }
+    const display = new Intl.NumberFormat('en-US').format(numeric);
+    return { display, numeric };
+}

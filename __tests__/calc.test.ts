@@ -1,5 +1,4 @@
-import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate } from '../src/lib/utils';
-import { formatAsINR } from '../src/lib/utils';
+import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate, formatAsINR } from '../src/lib/utils';
 
 
 describe('FX Savings Calculator - Calculations', () => {

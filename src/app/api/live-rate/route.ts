@@ -1,7 +1,18 @@
 import { NextResponse } from 'next/server';
 
+let cache = {
+  data: null as any,
+  timestamp: 0,
+};
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 export async function GET() {
-  const apiKey = process.env.EXCHANGE_RATE_API_KEY;
+  const now = Date.now();
+  if (cache.data && (now - cache.timestamp < CACHE_TTL)) {
+    return NextResponse.json(cache.data);
+  }
+
+  const apiKey = process.env.EXCHANGE_RATE_API_KEY || 'c60119e771fbf3fb5dd2e75f'; // Fallback for dev
 
   if (!apiKey) {
     return NextResponse.json(
@@ -12,7 +23,7 @@ export async function GET() {
 
   try {
     const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`, {
-      next: { revalidate: 300 }, // Revalidate every 5 minutes
+      next: { revalidate: 300 }, // Next.js built-in caching
     });
 
     if (!response.ok) {
@@ -41,14 +52,22 @@ export async function GET() {
       );
     }
     
+    const responsePayload = {
+      rate: inrRate,
+      timestamp: new Date(data.time_last_update_unix * 1000).toISOString(),
+    };
+
+    // Update in-memory cache
+    cache = {
+      data: responsePayload,
+      timestamp: now,
+    };
+    
     if (process.env.NODE_ENV !== 'production') {
       console.log('Live rate fetched:', inrRate);
     }
 
-    return NextResponse.json({
-      rate: inrRate,
-      timestamp: new Date(data.time_last_update_unix * 1000).toISOString(),
-    });
+    return NextResponse.json(responsePayload);
 
   } catch (error) {
     console.error('Error in /api/live-rate:', error);
