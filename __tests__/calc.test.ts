@@ -1,4 +1,4 @@
-import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate } from '../src/lib/calculations';
+import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate } from '../src/lib/utils';
 import { formatAsINR } from '../src/lib/utils';
 
 
