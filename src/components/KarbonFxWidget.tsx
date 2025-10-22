@@ -182,8 +182,14 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
     const karbonTotalInr = useMemo(() => calculateTotalInr(usdAmount, liveRate || 0), [usdAmount, liveRate]);
     
     const handleUsdChange = (value: string | undefined) => {
-        const numValue = parseFloat(value || '0');
-        if (!isNaN(numValue)) {
+        let numValue = parseFloat(value || '0');
+        if (isNaN(numValue)) {
+            numValue = 0;
+        }
+
+        if (numValue > 100000) {
+            setUsdAmount(100000);
+        } else {
             setUsdAmount(numValue);
         }
     };
@@ -230,7 +236,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             </div>
 
-            <div className="px-8 pb-8 pt-2 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pb-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -299,3 +305,4 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         </div>
     );
 };
+
