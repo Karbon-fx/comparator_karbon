@@ -204,9 +204,9 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             
 
             <div className="px-8 pt-8 pb-2 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
-                <div className="mb-8">
+                <div className="mb-4">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
-                        Amount to Convert
+                        Your client pays
                     </label>
                     <div className="relative">
                         <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-6 py-4 shadow-sm">
@@ -221,6 +221,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                                 className="flex-1 text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums"
                                 placeholder="1,000"
                                 allowNegativeValue={false}
+                                maxLength={6}
                             />
                             <div className="flex gap-2 ml-4">
                                 <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setUsdAmount(Math.min(100000, usdAmount + 100))} className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-[#0066CC] hover:text-white transition-colors flex items-center justify-center">
@@ -305,4 +306,5 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         </div>
     );
 };
+
 
