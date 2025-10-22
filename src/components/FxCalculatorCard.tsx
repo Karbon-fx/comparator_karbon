@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useMemo } from 'react';
@@ -167,10 +166,10 @@ export default function FxCalculatorCard() {
 
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-[#f4f6fa] rounded-2xl shadow-md p-6 md:p-8 font-sans">
+    <div className="w-full max-w-4xl mx-auto bg-[#f4f6fa] rounded-2xl shadow-lg p-6 md:p-8 font-sans">
       <div className="space-y-6">
         <div>
-          <p className="text-sm text-[#667085] mb-2">Your client pays</p>
+          <p className="text-sm text-muted-foreground mb-2">Your client pays</p>
           <div className="relative">
              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none gap-2">
               <UsdFlag />
@@ -181,7 +180,7 @@ export default function FxCalculatorCard() {
               value={`${new Intl.NumberFormat('en-US').format(usdAmount)}`}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
-              className="w-full pl-16 pr-4 py-2 text-lg font-semibold text-[#101828] bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-500/10"
+              className="w-full pl-16 pr-4 py-2 text-lg font-semibold text-[#101828] bg-white rounded-lg border border-gray-200 focus:outline-none focus:ring-4 focus:ring-blue-500/10 transition"
               aria-label="USD Amount"
             />
           </div>
@@ -212,30 +211,30 @@ export default function FxCalculatorCard() {
             <TooltipProvider>
                 <Table>
                     <TableHeader>
-                        <TableRow className="hover:bg-transparent">
-                            <TableHead className="w-1/4 font-semibold text-left text-[#101828] p-2">Description</TableHead>
+                        <TableRow className="hover:bg-transparent border-b-gray-200">
+                            <TableHead className="w-1/4 font-semibold text-left text-muted-foreground p-2">Description</TableHead>
                             <TableHead className="text-center font-semibold text-[#145aff] p-2">Karbon (zero-markup)</TableHead>
-                            <TableHead className="text-center font-semibold text-[#101828] p-2">Bank</TableHead>
-                            <TableHead className="text-center font-semibold text-[#101828] p-2">PayPal</TableHead>
+                            <TableHead className="text-center font-semibold text-primary p-2">Bank</TableHead>
+                            <TableHead className="text-center font-semibold text-primary p-2">PayPal</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow className="odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-medium text-[#667085] p-3">Amount to convert (USD)</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                        <TableRow className="odd:bg-white even:bg-slate-50 border-none">
+                            <TableCell className="font-medium text-muted-foreground p-3">Amount to convert (USD)</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">${new Intl.NumberFormat('en-US').format(usdAmount)}</TableCell>
                         </TableRow>
 
-                        <TableRow className="odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-medium text-[#667085] p-3">Live Rates as on {lastUpdated || '...'}</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
-                            <TableCell className="text-center tabular-nums p-3">{formatRate(liveRate)}</TableCell>
+                        <TableRow className="odd:bg-white even:bg-slate-50 border-none">
+                            <TableCell className="font-medium text-muted-foreground p-3">Live Rates as on {lastUpdated || '...'}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">{formatRate(liveRate)}</TableCell>
+                            <TableCell className="text-center tabular-nums p-3 text-primary font-medium">{formatRate(liveRate)}</TableCell>
                         </TableRow>
                         
-                        <TableRow className="border-t border-b border-gray-200/80 my-4 odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-medium text-[#667085] p-3">Rate Offered</TableCell>
+                        <TableRow className="odd:bg-white even:bg-slate-50 border-y border-gray-200/80">
+                            <TableCell className="font-medium text-muted-foreground p-3">Rate Offered</TableCell>
                             <TableCell className="text-center font-semibold text-gray-800 tabular-nums p-3">{formatRate(karbon.offeredRate)}</TableCell>
                             <TableCell className="p-2">
                                 <Input 
@@ -263,8 +262,8 @@ export default function FxCalculatorCard() {
                             </TableCell>
                         </TableRow>
 
-                        <TableRow className="odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-medium text-[#667085] p-3">
+                        <TableRow className="odd:bg-white even:bg-slate-50 border-none">
+                            <TableCell className="font-medium text-muted-foreground p-3">
                                 <Tooltip>
                                     <TooltipTrigger className="cursor-help underline decoration-dotted">Markup</TooltipTrigger>
                                     <TooltipContent>liveRate - offeredRate</TooltipContent>
@@ -276,17 +275,17 @@ export default function FxCalculatorCard() {
                         </TableRow>
                         
                         <TableRow className="border-t-2 border-gray-200 odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-semibold text-[#101828] p-3 pt-5">Total INR received</TableCell>
-                            <TableCell className="text-center font-bold text-lg text-[#101828] tabular-nums p-3 pt-5">{formatAsINR(karbon.totalInr)}</TableCell>
-                            <TableCell className={cn("text-center font-semibold text-gray-700 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.totalInr)}</TableCell>
-                            <TableCell className={cn("text-center font-semibold text-gray-700 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.totalInr)}</TableCell>
+                            <TableCell className="font-semibold text-primary p-3 pt-5 text-base">Total INR received</TableCell>
+                            <TableCell className="text-center font-bold text-xl text-primary tabular-nums p-3 pt-5">{formatAsINR(karbon.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center font-semibold text-lg text-gray-800 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.totalInr)}</TableCell>
+                            <TableCell className={cn("text-center font-semibold text-lg text-gray-800 tabular-nums transition-colors duration-500 p-3 pt-5", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.totalInr)}</TableCell>
                         </TableRow>
 
-                        <TableRow className="odd:bg-white even:bg-slate-50">
-                            <TableCell className="font-semibold text-[#101828] p-3">Savings with Karbon</TableCell>
-                            <TableCell className="text-center font-bold text-green-600 tabular-nums p-3">{formatAsINR(0)}</TableCell>
-                            <TableCell className={cn("text-center font-bold text-green-600 tabular-nums transition-colors duration-500 p-3", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.savings)}</TableCell>
-                            <TableCell className={cn("text-center font-bold text-green-600 tabular-nums transition-colors duration-500 p-3", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.savings)}</TableCell>
+                        <TableRow className="odd:bg-white even:bg-slate-50 border-none">
+                            <TableCell className="font-semibold text-primary p-3 text-base">Savings with Karbon</TableCell>
+                            <TableCell className="text-center font-bold text-green-600 tabular-nums p-3 text-lg">{formatAsINR(0)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 text-lg tabular-nums transition-colors duration-500 p-3", highlightedRow === 'bank' && 'bg-blue-100/50')}>{formatAsINR(bank.savings)}</TableCell>
+                            <TableCell className={cn("text-center font-bold text-green-600 text-lg tabular-nums transition-colors duration-500 p-3", highlightedRow === 'paypal' && 'bg-blue-100/50')}>{formatAsINR(paypal.savings)}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
@@ -296,5 +295,3 @@ export default function FxCalculatorCard() {
     </div>
   );
 }
-
-    
