@@ -35,7 +35,7 @@ body {
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
     
-    --primary: 222 94% 50%; 
+    --primary: 206 90% 40%;
     --primary-foreground: 210 40% 98%;
     
     --secondary: 240 5% 96%;
@@ -44,15 +44,15 @@ body {
     --muted: 240 5% 65%;
     --muted-foreground: 240 5% 45%;
     
-    --accent: 222 94% 50%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 206 90% 40%;
+    --accent-foreground: 210 40% 98%;
     
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 222 94% 50%;
+    --ring: 206 90% 40%;
     
     --radius: 0.75rem;
 
@@ -136,5 +136,38 @@ body {
   }
   .tabular-nums {
     font-feature-settings: "tnum";
+  }
+
+  .karbon-fx-widget [data-radix-slider-track] {
+    background-color: #E5E7EB;
+    height: 6px;
+    border-radius: 9999px;
+  }
+
+  .karbon-fx-widget [data-radix-slider-range] {
+    background: linear-gradient(90deg, #0066CC 0%, #6495ED 100%);
+    height: 100%;
+    border-radius: 9999px;
+  }
+
+  .karbon-fx-widget [data-radix-slider-thumb] {
+    width: 20px;
+    height: 20px;
+    background: white;
+    border: 3px solid #0066CC;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+    cursor: grab;
+    transition: all 200ms ease;
+  }
+
+  .karbon-fx-widget [data-radix-slider-thumb]:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+  }
+
+  .karbon-fx-widget [data-radix-slider-thumb]:active {
+    cursor: grabbing;
+    transform: scale(1.05);
   }
 }

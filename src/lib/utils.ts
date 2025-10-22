@@ -6,6 +6,14 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function convertToLogScale(value: number): number {
+  return Math.log10(Math.max(100, value));
+}
+
+export function convertFromLogScale(logValue: number): number {
+  return Math.round(Math.pow(10, logValue));
+}
+
 /**
  * Safely converts a value to a number, returning NaN for invalid inputs.
  * @param v - The value to convert.
@@ -121,4 +129,8 @@ export function calculateSavings(karbonTotalInr: number, providerTotalInr: numbe
     return NaN;
   }
   return karbonTotalInr - providerTotalInr;
+}
+
+export function formatNumber(num: number): string {
+  return new Intl.NumberFormat('en-US').format(num);
 }
