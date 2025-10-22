@@ -1,6 +1,6 @@
 /**
  * Sanitizes a string to be a valid rate input.
- * - Allows up to 3 digits for the integer part.
+ * - Allows up to 2 digits for the integer part.
  * - Allows up to 4 digits for the decimal part.
  * - Removes any non-digit or non-dot characters.
  * @param v The input string.
@@ -16,7 +16,7 @@ export function sanitizeRateOfferedInput(v: string): string {
   
   const [intPart, decPart] = s.split('.');
 
-  const sanitizedInt = (intPart || '').slice(0, 3);
+  const sanitizedInt = (intPart || '').slice(0, 2);
   
   if (decPart !== undefined) {
     const sanitizedDec = decPart.slice(0, 4);
