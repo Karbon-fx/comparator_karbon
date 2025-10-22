@@ -1,3 +1,4 @@
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -46,6 +47,23 @@ export function formatAsINR(amount: number | undefined | null): string {
   }).format(amount);
 }
 
+/**
+ * Formats a number as a USD currency string.
+ * @param amount - The number to format.
+ * @returns A formatted currency string or '—'.
+ */
+export function formatAsUSD(amount: number | undefined | null): string {
+    if (amount === undefined || amount === null || !Number.isFinite(amount)) {
+      return "$0.00";
+    }
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+
 
 /**
  * Calculates the markup between the live rate and the rate offered by a provider.
@@ -69,7 +87,7 @@ export function calculateMarkup(liveRate: number, offeredRate: number): number {
  * @returns The total amount in INR or NaN.
  */
 export function calculateTotalInr(usdAmount: number, offeredRate: number): number {
-  if (isNaN(usdAmount) || isNaN(offeredRate) || usdAmount <= 0 || offeredRate <= 0) {
+  if (isNaN(usdAmount) || isNaN(offeredRate) || usdAmount < 0 || offeredRate < 0) {
     return NaN;
   }
   return usdAmount * offeredRate;
