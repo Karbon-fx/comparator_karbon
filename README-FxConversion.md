@@ -9,6 +9,15 @@ This project is built with:
 - Tailwind CSS
 - Jest and React Testing Library for testing.
 
+The styling uses CSS variables defined in `src/app/globals.css` which can be customized.
+
+- `--karbon-primary: #101828`
+- `--karbon-accent: #43A6FF`
+- `--card-bg: #FFFFFF`
+- `--card-surface: #F5F5F5`
+- `--success: #059669`
+- `--danger: #ef4444`
+
 ## Environment Variables
 
 To run this application, you need to set up an environment variable for the ExchangeRate-API key.

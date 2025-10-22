@@ -9,32 +9,41 @@ body {
 
 @layer base {
   :root {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 213 94% 68%;
-    --radius: 0.5rem;
+    --background: 240 10% 97%; /* Light Gray */
+    --foreground: 222 47% 11%;
+    
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+    
+    --primary: 213 94% 50%; /* Deep Sky Blue */
+    --primary-foreground: 210 40% 98%;
+    
+    --secondary: 240 5% 96%;
+    --secondary-foreground: 222 47% 11%;
+    
+    --muted: 240 5% 65%;
+    --muted-foreground: 240 5% 45%;
+    
+    --accent: 180 100% 50%; /* Cyan */
+    --accent-foreground: 222 47% 11%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 213 94% 50%;
+    
+    --radius: 0.75rem;
 
     /* FX Savings Ace Custom Tokens */
     --karbon-primary: #101828;
-    --karbon-accent: #145aff;
-    --card-bg: #ffffff;
-    --card-surface: #f7f9fb;
+    --karbon-accent: #43A6FF;
+    --card-bg: #FFFFFF;
+    --card-surface: #F5F5F5;
     --success: #059669;
     --danger: #ef4444;
   }

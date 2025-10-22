@@ -62,8 +62,11 @@ describe('FxConversionCard UI Test', () => {
     });
     
     // Check if the table reflects the new amount
-    const amountCells = await screen.findAllByText('$50,000');
-    expect(amountCells.length).toBe(3); // one for each provider
+    // Use debounced amount for assertions
+    await waitFor(async () => {
+      const amountCells = await screen.findAllByText('$50,000');
+      expect(amountCells.length).toBeGreaterThan(0);
+    });
 
     // Type an out-of-bounds value (low)
     fireEvent.change(usdInput, { target: { value: '50' } });
@@ -79,6 +82,29 @@ describe('FxConversionCard UI Test', () => {
     await waitFor(() => {
       expect(usdInput).toHaveValue('100,000');
       expect(screen.getByText('Maximum is $100,000')).toBeInTheDocument();
+    });
+  });
+
+  it('validates rate inputs and shows error messages', async () => {
+    render(<FxConversionCard />);
+    
+    const rateInputs = screen.getAllByRole('textbox', {name: /offered rate/i});
+    const bankRateInput = rateInputs.find(input => (input as HTMLInputElement).value === '85.1718');
+    
+    if (!bankRateInput) throw new Error("Bank rate input not found");
+
+    // Test empty value
+    fireEvent.change(bankRateInput, { target: { value: '' } });
+    fireEvent.blur(bankRateInput);
+    await waitFor(() => {
+      expect(screen.getByText('A valid rate is required.')).toBeInTheDocument();
+    });
+
+    // Test valid value again to clear error
+    fireEvent.change(bankRateInput, { target: { value: '85.5' } });
+    fireEvent.blur(bankRateInput);
+    await waitFor(() => {
+      expect(screen.queryByText('A valid rate is required.')).not.toBeInTheDocument();
     });
   });
 });

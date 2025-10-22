@@ -7,11 +7,9 @@
  * @returns The sanitized string.
  */
 export function sanitizeRateOfferedInput(v: string): string {
-  if (!v) return '';
-  // Remove everything except digits and dot
-  let s = v.replace(/[^\d.]/g, '');
-  
-  // Ensure only one dot
+  if (v === null || v === undefined) return '';
+  // Remove everything except digits and the first dot
+  let s = v.toString().replace(/[^\d.]/g, '');
   const parts = s.split('.');
   if (parts.length > 2) {
     s = `${parts[0]}.${parts.slice(1).join('')}`;
@@ -20,9 +18,13 @@ export function sanitizeRateOfferedInput(v: string): string {
   const [intPart, decPart] = s.split('.');
 
   const sanitizedInt = (intPart || '').slice(0, 3);
-  const sanitizedDec = (decPart || '').slice(0, 4);
-
-  return decPart !== undefined ? `${sanitizedInt}.${sanitizedDec}` : sanitizedInt;
+  
+  if (decPart !== undefined) {
+    const sanitizedDec = decPart.slice(0, 4);
+    return `${sanitizedInt}.${sanitizedDec}`;
+  }
+  
+  return sanitizedInt;
 }
 
 /**
