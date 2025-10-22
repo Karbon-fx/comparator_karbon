@@ -56,9 +56,7 @@ const AnimatedNumber = ({
 
 
 const BankIcon = () => (
-    <svg width="40" height="40" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-        <path fill="#0066CC" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-29.35 63.84h13.23v76.32h-13.23Zm20.48 33.35a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Zm44 9.17a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Z"/>
-    </svg>
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_24_7655)"> <path d="M2.5874 9.66222C2.5874 9.66222 2.5874 9.66222 2.58897 9.65637C4.0175 4.32502 9.50114 1.15882 14.8328 2.58742C20.17 4.01754 23.336 9.5014 21.9075 14.8328C21.9059 14.8386 21.9059 14.8386 21.9059 14.8386C20.4773 20.1702 14.9936 23.3361 9.65635 21.906C4.32474 20.4774 1.1588 14.9938 2.5874 9.66222Z" fill="url(#paint0_radial_24_7655)"/> </g> <defs> <radialGradient id="paint0_radial_24_7655" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16.5059 19.7451) rotate(-117.444) scale(18.5589 18.5589)"> <stop stop-color="#F59314"/> <stop offset="0.557323" stop-color="#E54C1D"/> <stop offset="0.796911" stop-color="#CF3921"/> <stop offset="1" stop-color="#85271B"/> </radialGradient> <clipPath id="clip0_24_7655"> <rect width="20" height="20" fill="white" transform="translate(5.17638) rotate(15)"/> </clipPath> </defs> </svg>
 );
 
 const PayPalIcon = () => (
@@ -199,7 +197,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
             
 
-            <div className="px-8 py-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pt-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="mb-8">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
                         Amount to Convert
@@ -343,3 +341,4 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             </div>
         </div>
     );
+
