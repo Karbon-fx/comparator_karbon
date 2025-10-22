@@ -62,7 +62,7 @@ const BankIcon = () => (
 );
 
 const PayPalIcon = () => (
-    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg" alt="PayPal" className="w-8 h-8" />
+    <svg width="38" height="45" viewBox="0 0 38 45" fill="none" xmlns="http://www.w3.org/2000/svg"> <mask id="mask0_0_8" style={{maskType:"luminance"}} maskUnits="userSpaceOnUse" x="0" y="0" width="38" height="45"> <path d="M0 0H37.35V45H0V0Z" fill="white"/> </mask> <g mask="url(#mask0_0_8)"> <path d="M31.858 10.35C31.858 15.924 26.714 22.5 18.931 22.5H11.434L11.066 24.822L9.317 36H0L5.605 0H20.7C25.783 0 29.782 2.833 31.255 6.77C31.6798 7.91467 31.8844 9.12933 31.858 10.35Z" fill="#002991"/> <path d="M37.228 20.7C36.7307 23.7214 35.1744 26.4672 32.8376 28.446C30.5008 30.4248 27.5361 31.5074 24.474 31.5H19.268L17.101 45H7.834L9.317 36L11.067 24.822L11.434 22.5H18.931C26.704 22.5 31.858 15.924 31.858 10.35C35.683 12.324 37.913 16.313 37.228 20.7Z" fill="#60CDFF"/> <path d="M31.858 10.35C30.254 9.511 28.309 9 26.192 9H13.552L11.434 22.5H18.931C26.704 22.5 31.858 15.924 31.858 10.35Z" fill="#008CFF"/> </g> </svg>
 );
 
 
@@ -343,5 +343,3 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             </div>
         </div>
     );
-
-    
