@@ -1,4 +1,5 @@
-import { calculateMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate, formatAsINR } from '../src/lib/utils';
+
+import { calculateMarkupPerUsd, calculateTotalMarkup, calculateTotalInr, calculateSavings, toNumberSafe, formatRate, formatAsINR } from '../src/lib/utils';
 
 
 describe('FX Savings Calculator - Calculations', () => {
@@ -41,16 +42,23 @@ describe('FX Savings Calculator - Calculations', () => {
       });
   });
 
-  describe('calculateMarkup', () => {
-    it('should calculate the correct positive markup', () => {
-      expect(calculateMarkup(liveRate, bankRate)).toBeCloseTo(2.7818);
-      expect(calculateMarkup(liveRate, paypalRate)).toBeCloseTo(2.6429);
+  describe('calculateMarkupPerUsd', () => {
+    it('should calculate the correct positive markup per USD', () => {
+      expect(calculateMarkupPerUsd(liveRate, bankRate)).toBeCloseTo(2.7818);
+      expect(calculateMarkupPerUsd(liveRate, paypalRate)).toBeCloseTo(2.6429);
     });
 
     it('should return NaN for invalid inputs', () => {
-      expect(calculateMarkup(NaN, 85)).toBeNaN();
-      expect(calculateMarkup(87, NaN)).toBeNaN();
-      expect(calculateMarkup(0, 85)).toBeNaN();
+      expect(calculateMarkupPerUsd(NaN, 85)).toBeNaN();
+      expect(calculateMarkupPerUsd(87, NaN)).toBeNaN();
+      expect(calculateMarkupPerUsd(0, 85)).toBeNaN();
+    });
+  });
+  
+  describe('calculateTotalMarkup', () => {
+    it('should calculate the correct total markup for the transaction', () => {
+        const markup = calculateMarkupPerUsd(liveRate, bankRate);
+        expect(calculateTotalMarkup(markup, usdAmount)).toBeCloseTo(2781.80);
     });
   });
 

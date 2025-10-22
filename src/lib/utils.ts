@@ -64,20 +64,36 @@ export function formatAsUSD(amount: number | undefined | null): string {
     }).format(amount);
   }
 
-
 /**
- * Calculates the markup between the live rate and the rate offered by a provider.
- * Returns NaN if inputs are invalid.
- * @param liveRate - The current market exchange rate.
- * @param offeredRate - The exchange rate offered by the provider.
- * @returns The markup value or NaN.
+ * Calculates the per-USD markup in INR.
+ * Positive value means the provider's rate is worse than live rate.
+ * Zero or negative means at or better than live rate.
+ * 
+ * @param liveRate - The mid-market live exchange rate (INR per USD)
+ * @param offeredRate - The provider's offered rate (INR per USD)
+ * @returns Markup per USD in INR
  */
-export function calculateMarkup(liveRate: number, offeredRate: number): number {
+export function calculateMarkupPerUsd(liveRate: number, offeredRate: number): number {
   if (isNaN(liveRate) || isNaN(offeredRate) || liveRate <= 0 || offeredRate <= 0) {
     return NaN;
   }
   return liveRate - offeredRate;
 }
+
+/**
+ * Calculates the total markup amount for the entire transaction.
+ * 
+ * @param markupPerUsd - Markup per USD in INR
+ * @param usdAmount - Total USD amount being converted
+ * @returns Total markup in INR
+ */
+export function calculateTotalMarkup(markupPerUsd: number, usdAmount: number): number {
+  if (isNaN(markupPerUsd) || isNaN(usdAmount)) {
+    return NaN;
+  }
+  return markupPerUsd * usdAmount;
+}
+
 
 /**
  * Calculates the total amount in INR received for a given USD amount and exchange rate.

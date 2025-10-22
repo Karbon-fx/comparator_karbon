@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -53,10 +54,10 @@ export default {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
-        'karbon-primary': 'var(--karbon-primary)',
-        'karbon-accent': 'var(--karbon-accent)',
-        'card-bg': 'var(--card-bg)',
-        'card-surface': 'var(--card-surface)',
+        'karbon-science-blue': 'var(--karbon-science-blue)',
+        'karbon-cornflower': 'var(--karbon-cornflower)',
+        'karbon-ebony': 'var(--karbon-ebony)',
+        'karbon-blue': '#0066CC',
         'success': 'var(--success)',
         'danger': 'var(--danger)',
       },
