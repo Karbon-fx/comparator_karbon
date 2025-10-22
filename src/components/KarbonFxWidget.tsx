@@ -275,7 +275,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                 </div>
             </div>
 
-            <div className="px-8 py-8 bg-gray-50">
+            <div className="px-8 py-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="text-center mb-8">
                 </div>
 
