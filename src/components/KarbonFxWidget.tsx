@@ -56,7 +56,9 @@ const AnimatedNumber = ({
 
 
 const BankIcon = () => (
-    <svg width="28" height="28" viewBox="0 0 100 40" fill="currentColor" xmlns="http://www.w3.org/2000/svg" className="text-gray-600"><path d="M0 0H16V40H0V0ZM40 12L50 4L60 12V16H40V12ZM42 18H58V20H42V18ZM42 22H58V24H42V22ZM38 28H62V32H38V28ZM36 34H64V38H36V34ZM66 0H81L100 40H85L81 28H70L66 40H51L66 0ZM78 22L76 16H74L72 22H78Z" /></svg>
+    <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#0066CC" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-29.35 63.84h13.23v76.32h-13.23Zm20.48 33.35a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Zm44 9.17a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Z"/>
+    </svg>
 );
 
 const PayPalIcon = () => (
@@ -205,7 +207,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                         <p className="text-blue-100 text-sm">Zero markup on exchange rates</p>
                     </div>
                     <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
-                        <img src="/karbon-logo.svg" alt="Karbon" className="w-12 h-12" />
+                        <img src="https://cdn.prod.website-files.com/670ceff4b2fa1be44c3929a5/67936f1eab8fdd86f27b9e5c_Karbon%20Card%20Logo%201.svg" alt="Karbon" className="w-12 h-12" />
                     </div>
                 </div>
             </div>
@@ -288,9 +290,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             <div className="px-8 py-8 bg-gray-50">
                 <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-karbon-ebony mb-2">
-                        See How Much You Save
-                    </h3>
+                    
                     <p className="text-gray-600">
                         Karbon offers zero markup. Compare with other providers below.
                     </p>
