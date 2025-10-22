@@ -8,6 +8,8 @@
  */
 export function sanitizeRateOfferedInput(v: string): string {
   if (v === null || v === undefined) return '';
+
+  // 1. Remove non-numeric characters except for the first dot
   let s = v.toString().replace(/[^\d.]/g, '');
   const parts = s.split('.');
   if (parts.length > 2) {
@@ -16,13 +18,16 @@ export function sanitizeRateOfferedInput(v: string): string {
   
   const [intPart, decPart] = s.split('.');
 
+  // 2. Sanitize integer part (max 2 digits)
   const sanitizedInt = (intPart || '').slice(0, 2);
   
+  // 3. If a decimal part exists, sanitize it (max 4 digits) and combine
   if (decPart !== undefined) {
     const sanitizedDec = decPart.slice(0, 4);
     return `${sanitizedInt}.${sanitizedDec}`;
   }
   
+  // 4. If there's no decimal part, just return the sanitized integer
   return sanitizedInt;
 }
 
