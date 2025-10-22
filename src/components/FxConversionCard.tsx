@@ -6,6 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { formatRate, formatAsINR, toNumberSafe, calculateMarkup, calculateTotalInr, calculateSavings } from '@/lib/utils';
 import { sanitizeRateOfferedInput, sanitizeUsdDisplay } from '@/lib/inputSanitizers';
+import { useCountUp } from '@/hooks/useCountUp';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -80,6 +81,9 @@ const ProviderRow = ({ provider, usdAmount, liveRate, karbonInr, onRateChange, o
     };
   }, [usdAmount, liveRate, rate, karbonInr]);
 
+  const animatedTotalInr = useCountUp(result.totalInr);
+  const animatedSavings = useCountUp(result.savings);
+
   const isBestSavings = result.savings > 0 && result.savings === bestSavings;
 
   return (
@@ -109,8 +113,8 @@ const ProviderRow = ({ provider, usdAmount, liveRate, karbonInr, onRateChange, o
         )}
       </TableCell>
       <TableCell className={cn("text-center tabular-nums", Number.isFinite(result.markup) && result.markup > 0 ? 'text-danger' : 'text-gray-500')}>{formatRate(result.markup)}</TableCell>
-      <TableCell className="text-center font-semibold text-lg text-gray-800 tabular-nums">{formatAsINR(result.totalInr)}</TableCell>
-      <TableCell className={cn("text-center font-bold text-lg tabular-nums text-success", isBestSavings && "bg-cyan-100/50 ring-1 ring-cyan-400")}>{formatAsINR(result.savings)}</TableCell>
+      <TableCell className="text-center font-semibold text-lg text-gray-800 tabular-nums">{formatAsINR(animatedTotalInr)}</TableCell>
+      <TableCell className={cn("text-center font-bold text-lg tabular-nums text-success", isBestSavings && "bg-cyan-100/50 ring-1 ring-cyan-400")}>{formatAsINR(animatedSavings)}</TableCell>
     </TableRow>
   );
 };
