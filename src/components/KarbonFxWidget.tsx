@@ -205,13 +205,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                     <div className="relative">
                         <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-6 py-4 shadow-sm">
                            <div className="flex items-center gap-3 mr-4">
-                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center border border-gray-200">
-                                    <DollarSign className="h-6 w-6 text-[#0066CC]" />
-                                </div>
-                                <div className="flex flex-col">
-                                    <span className="text-xs font-medium text-gray-500">USD</span>
-                                    <span className="text-lg font-bold text-[#0C1A2B]">$</span>
-                                </div>
+                                <div className="flex items-center justify-center w-10 h-10 font-semibold text-karbon-blue">USD</div>
                             </div>
                             <CurrencyInput
                                 id="usd-input"
@@ -341,4 +335,3 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             </div>
         </div>
     );
-
