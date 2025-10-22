@@ -56,7 +56,7 @@ const AnimatedNumber = ({
 
 
 const BankIcon = () => (
-    <svg width="32" height="32" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+    <svg width="40" height="40" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
         <path fill="#0066CC" d="M128 24a104 104 0 1 0 104 104A104.11 104.11 0 0 0 128 24m-29.35 63.84h13.23v76.32h-13.23Zm20.48 33.35a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Zm44 9.17a39.31 39.31 0 0 1-5.32-1.29l2-12.06a28.14 28.14 0 0 0 4.1.86a11.52 11.52 0 0 0 7.26-1.92a7.68 7.68 0 0 0 2.76-6.11c0-4.63-2.43-7.23-7.29-9.15c-6-2.4-9.84-5.49-9.84-11.19a11.14 11.14 0 0 1 4-9.12a14.23 14.23 0 0 1 9.87-3.48a28.27 28.27 0 0 1 12.24 2.82l-3 11.45a19.64 19.64 0 0 0-8.64-2.4c-4.13 0-6.42 2.37-6.42 5.58c0 3.84 2.62 5.73 8.24 8.07c6.84 2.85 10.89 6.11 10.89 12.15a12.06 12.06 0 0 1-4.5 10.11a16.29 16.29 0 0 1-11.82 4.38Z"/>
     </svg>
 );
@@ -290,8 +290,10 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                         </div>
 
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center">
-                                <img src="/karbon-icon.svg" alt="Karbon" className="w-10 h-10" />
+                            <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2">
+                                <svg width="211" height="316" viewBox="0 0 211 316" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                    <path fillRule="evenodd" clipRule="evenodd" d="M86.7064 178.375L210.541 278.108L210.576 315.419L86.8342 315.534L86.7064 178.375ZM49.4969 0.0857278L49.7651 288.067L0.22231 238.89L0 0.131794L49.4969 0.0857278ZM209.243 68.6042L210.348 69.8293L210.5 233.264L111.433 154.354L209.243 68.6042ZM141.554 0L185.58 49.8828L86.6681 137.21L86.5407 0.0512382L141.554 0Z" fill="#0F71FF"/>
+                                </svg>
                             </div>
                             <h4 className="text-xl font-bold">Karbon</h4>
                         </div>
@@ -341,4 +343,5 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
             </div>
         </div>
     );
-};
+
+    
