@@ -1,6 +1,6 @@
 /**
  * Sanitizes a string to be a valid rate input.
- * - Allows up to 2 digits for the integer part.
+ * - Allows up to 3 digits for the integer part.
  * - Allows up to 4 digits for the decimal part.
  * - Removes any non-digit or non-dot characters.
  * @param v The input string.
@@ -9,27 +9,31 @@
 export function sanitizeRateOfferedInput(v: string): string {
   if (v === null || v === undefined) return '';
 
-  // 1. Remove non-numeric characters except for the first dot
-  let s = v.toString().replace(/[^\d.]/g, '');
-  const parts = s.split('.');
-  if (parts.length > 2) {
-    s = `${parts[0]}.${parts.slice(1).join('')}`;
-  }
-  
-  const [intPart, decPart] = s.split('.');
+  let value = v.toString();
 
-  // 2. Sanitize integer part (max 2 digits)
-  const sanitizedInt = (intPart || '').slice(0, 2);
-  
-  // 3. If a decimal part exists, sanitize it (max 4 digits) and combine
-  if (decPart !== undefined) {
-    const sanitizedDec = decPart.slice(0, 4);
-    return `${sanitizedInt}.${sanitizedDec}`;
+  // Remove any characters that are not digits or a dot
+  value = value.replace(/[^\d.]/g, "");
+
+  // If there are multiple dots, keep only the first one
+  const parts = value.split('.');
+  if (parts.length > 2) {
+    value = `${parts[0]}.${parts.slice(1).join('')}`;
   }
-  
-  // 4. If there's no decimal part, just return the sanitized integer
-  return sanitizedInt;
+
+  const [integerPart, decimalPart] = value.split('.');
+
+  // Constrain integer part to 3 digits
+  const sanitizedInteger = integerPart.slice(0, 3);
+
+  if (decimalPart !== undefined) {
+    // Constrain decimal part to 4 digits
+    const sanitizedDecimal = decimalPart.slice(0, 4);
+    return `${sanitizedInteger}.${sanitizedDecimal}`;
+  }
+
+  return sanitizedInteger;
 }
+
 
 /**
  * Sanitizes and parses a USD display string.
