@@ -290,10 +290,6 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             <div className="px-8 py-8 bg-gray-50">
                 <div className="text-center mb-8">
-                    
-                    <p className="text-gray-600">
-                        Karbon offers zero markup. Compare with other providers below.
-                    </p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
