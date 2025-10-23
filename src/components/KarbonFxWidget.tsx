@@ -69,7 +69,7 @@ const USFlagIcon = () => (
         <path fill="#B22234" d="M0 0h20v12H0z"/>
         <path fill="#fff" d="M0 1h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0z"/>
         <path fill="#3C3B6E" d="M0 0h10v6H0z"/>
-        <path fill="#fff" d="M.4 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM3.6 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM5.2 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6.8 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM8.4 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM1.2 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2.8 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM4.4 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM7.6 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM.4 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM3.6 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM5.2 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6.8 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM8.4 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM1.2 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2.8 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM4.4 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM7.6 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4z"/>
+        <path fill="#fff" d="M.4 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM3.6 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM5.2 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6.8 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM8.4 4.5l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM1.2 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2.8 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM4.4 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM7.6 3.3l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM.4 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM3.6 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM5.2 2.1l.5-.3.L5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6.8 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM8.4 2.1l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM1.2 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM2.8 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM4.4 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM6 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4zM7.6 0.9l.5-.3.5.3-.2-.6.5-.4-.6-.1-.2-.6-.2.6-.6.1.5.4z"/>
     </svg>
 );
 
@@ -156,7 +156,7 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
     );
 };
 
-export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: KarbonFxWidgetProps) => {
+export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: KarbonFxWidgetProps) => {
     const [usdAmount, setUsdAmount] = useState<number>(initialAmount);
     const [liveRate, setLiveRate] = useState<number | null>(null);
     const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -216,7 +216,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
             
 
-            <div className="px-8 pt-8 pb-4">
+            <div className="px-8 pt-10 pb-8">
                 <div className="mb-4">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
                         Your client pays
@@ -234,8 +234,8 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                                 decimalsLimit={2}
                                 onValueChange={handleUsdChange}
                                 onBlur={handleUsdBlur}
-                                className="flex-1 text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums text-right"
-                                placeholder="1,000"
+                                className="flex-1 text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums text-right pr-4"
+                                placeholder="1,400"
                                 allowNegativeValue={false}
                                 maxLength={9}
                                 groupSeparator=","
@@ -255,7 +255,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             </div>
 
-            <div className="px-8 pb-8">
+            <div className="px-8 pb-10">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -342,4 +342,5 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         </div>
     );
 };
+
 
