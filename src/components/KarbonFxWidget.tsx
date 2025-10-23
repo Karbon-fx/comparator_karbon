@@ -189,7 +189,10 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         fetchLiveRate();
     }, []);
 
-    const karbonTotalInr = useMemo(() => calculateTotalInr(usdAmount, liveRate || 0), [usdAmount, liveRate]);
+    const PLATFORM_FEE_PERCENT = 0.0118; // 1% + 18% GST on the 1%
+    const karbonTotalBeforeFee = useMemo(() => calculateTotalInr(usdAmount, liveRate || 0), [usdAmount, liveRate]);
+    const platformFee = useMemo(() => karbonTotalBeforeFee * PLATFORM_FEE_PERCENT, [karbonTotalBeforeFee]);
+    const karbonTotalInr = useMemo(() => karbonTotalBeforeFee - platformFee, [karbonTotalBeforeFee, platformFee]);
     
     const handleUsdChange = (value: string | undefined) => {
         let numValue = parseFloat(value || '0');
@@ -213,7 +216,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
             
 
-            <div className="px-8 pt-8 pb-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pt-8 pb-4">
                 <div className="mb-4">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
                         Your client pays
@@ -252,7 +255,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             </div>
 
-            <div className="px-8 py-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pb-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -298,12 +301,12 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                                             </span>
                                         </TooltipTrigger>
                                         <TooltipContent>
-                                            <p>1 % Platform Fee + 18 % GST.</p>
+                                            <p>1% Platform Fee + 18% GST.</p>
                                         </TooltipContent>
                                     </Tooltip>
                                 </TooltipProvider>
                                 <span className="font-semibold tabular-nums">
-                                    ₹1.18
+                                    1.18%
                                 </span>
                             </div>
                             <div className="flex justify-between items-center">
@@ -339,3 +342,4 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         </div>
     );
 };
+
