@@ -65,7 +65,7 @@ const PayPalIcon = () => (
 );
 
 const USFlagIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded-sm">
         <path fill="#B22234" d="M0 0h20v12H0z"/>
         <path fill="#fff" d="M0 1h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0z"/>
         <path fill="#3C3B6E" d="M0 0h10v6H0z"/>
@@ -213,7 +213,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
             
 
-            <div className="px-8 pt-8 pb-2 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 pt-8 pb-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="mb-4">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
                         Your client pays
@@ -234,7 +234,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                                 className="flex-1 text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums text-right"
                                 placeholder="1,000"
                                 allowNegativeValue={false}
-                                maxLength={6}
+                                maxLength={9}
                                 groupSeparator=","
                                 decimalSeparator="."
                             />
@@ -252,7 +252,7 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
 
             </div>
 
-            <div className="px-8 pb-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
+            <div className="px-8 py-8 bg-gradient-to-br from-blue-50/50 to-sky-50/50">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -287,6 +287,24 @@ export const KarbonFxWidget = ({ initialAmount = 1000, compact = false }: Karbon
                             <div className="flex justify-between items-center">
                                 <span className="text-blue-100">Exchange rate</span>
                                 <span className="font-semibold tabular-nums">{formatRate(liveRate || 0)}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <span className="text-blue-100 flex items-center gap-1 cursor-help">
+                                                Platform Fee
+                                                <Info className="h-3 w-3 text-blue-200/80" />
+                                            </span>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>1 % Platform Fee + 18 % GST.</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <span className="font-semibold tabular-nums">
+                                    ₹1.18
+                                </span>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-blue-100">Rate markup</span>
