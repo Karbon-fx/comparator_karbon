@@ -3,7 +3,7 @@ import { KarbonFxWidget } from '@/components/KarbonFxWidget';
 
 export default function Home() {
   return (
-    <main className="flex items-start sm:items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 p-4">
+    <main className="flex items-start sm:items-center justify-center min-h-screen bg-white p-4">
       <KarbonFxWidget />
     </main>
   );
