@@ -115,14 +115,13 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                 </div>
             </div>
 
-            <AnimatePresence>
             {savings > 0 && (
-                <motion.div 
-                    initial={{ opacity: 0, height: 0, marginTop: 0, paddingTop: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem', paddingTop: '1.5rem' }}
-                    exit={{ opacity: 0, height: 0, marginTop: 0, paddingTop: 0 }}
+                <motion.div
+                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem' }}
+                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
                     transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="border-t border-gray-200"
+                    className="pt-6 border-t border-gray-200"
                 >
                     <p className="text-sm text-gray-600 mb-2">You lose with {name}</p>
                     <AnimatedCounter
@@ -132,7 +131,6 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                     />
                 </motion.div>
             )}
-            </AnimatePresence>
         </motion.div>
     );
 };
