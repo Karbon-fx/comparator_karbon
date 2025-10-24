@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { MicrosoftClarity } from '@/components/MicrosoftClarity';
 
 export const metadata: Metadata = {
   title: 'FX Savings Ace',
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className="font-body antialiased h-full bg-transparent">
         {children}
         <Toaster />
+        <MicrosoftClarity />
       </body>
     </html>
   );
