@@ -190,7 +190,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
     return (
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-transparent overflow-hidden">
-            <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
+            <div className="px-4 pt-4 pb-4">
                 <div className="mb-4">
                     <label className="block text-base sm:text-lg font-semibold text-karbon-ebony mb-3">
                         Your client pays
@@ -237,6 +237,12 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                         transition={{ delay: 0.1 }}
                         className="relative bg-gradient-to-br from-[#0066CC] to-[#6495ED] rounded-2xl p-6 text-white md:col-span-1"
                     >
+                        
+                        <div className="flex items-center justify-center mb-4">
+                            <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                ✓ ZERO MARKUP
+                            </div>
+                        </div>
 
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2">
@@ -354,7 +360,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 const KarbonFxWidgetSkeleton = () => {
     return (
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-transparent overflow-hidden animate-pulse">
-            <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
+            <div className="px-4 pt-4 pb-4">
                 <div className="mb-4">
                     <div className="h-5 w-32 bg-gray-200 rounded mb-3"></div>
                     <div className="h-20 bg-gray-200 rounded-2xl"></div>
@@ -391,4 +397,7 @@ const KarbonFxWidgetSkeleton = () => {
 };
 
     
+    
+
+
     
