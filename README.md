@@ -1,4 +1,4 @@
-# FX Savings Ace
+# Karbon Fx Comparator
 
 This is a USD → INR FX Savings Calculator that compares zero-markup currency exchange rates against other providers like banks and PayPal. It fetches live exchange rates, calculates markups, and shows your potential savings.
 
