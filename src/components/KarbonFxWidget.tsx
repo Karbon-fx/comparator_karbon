@@ -196,7 +196,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                         Your client pays
                     </label>
                     <div className="relative">
-                        <div className="flex items-center bg-white rounded-2xl focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4">
+                        <div className="flex items-center bg-white rounded-2xl focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4 border border-gray-200">
                            <div className="flex items-center gap-2 sm:gap-3">
                              <USFlagIcon />
                              <span className="text-xl sm:text-3xl font-bold text-karbon-ebony">USD</span>
@@ -239,9 +239,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                     >
                         
                         <div className="flex items-center justify-center mb-4">
-                            <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                ✓ ZERO MARKUP
-                            </div>
+                            
                         </div>
 
                         <div className="flex items-center gap-3 mb-6">
@@ -310,6 +308,9 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                                 <span className="font-bold text-green-300 tabular-nums">₹0.00</span>
                             </div>
                         </div>
+                        <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full text-center mt-4">
+                                ✓ ZERO MARKUP
+                            </div>
                         <motion.a
                             href="https://karbonfx.com/signup-v2-form?utm_source=karbonccomparator"
                             target="_blank"
