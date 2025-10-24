@@ -92,9 +92,19 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
         </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-gray-600 font-medium flex items-center gap-1 cursor-help">
-            {UI_TEXT.LABELS.RATE_MARKUP}
-          </span>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-gray-600 font-medium flex items-center gap-1 cursor-help">
+                  {UI_TEXT.LABELS.RATE_MARKUP}
+                  <Info className="h-3 w-3 text-gray-400" />
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{UI_TEXT.TOOLTIPS.RATE_MARKUP}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <span className={`font-semibold tabular-nums ${
             markupPerUsd > 0 ? 'text-red-600' : markupPerUsd < 0 ? 'text-green-600' : 'text-gray-600'
           }`}>

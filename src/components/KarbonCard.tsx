@@ -1,11 +1,9 @@
 /**
- * Karbon Card Component - Completely fixed version
+ * Karbon Card Component - Tooltips removed
  */
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Info } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatRate } from '@/lib/utils';
 import { 
   ANIMATION_CONFIG, 
@@ -107,28 +105,14 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
           <span className="text-blue-100 font-medium">
             {UI_TEXT.LABELS.EXCHANGE_RATE}
           </span>
-          <div className="flex items-center gap-2">
-            <span className="font-semibold text-white tabular-nums">
-              {formatRate(displayRate)}
-            </span>
-            {isRateStale && (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Info className="h-3 w-3 text-yellow-300 cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Using cached or fallback rate</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            )}
-          </div>
+          <span className="font-semibold text-white tabular-nums">
+            {formatRate(displayRate)}
+          </span>
         </div>
 
         {/* Platform Fee */}
         <div className="flex justify-between items-center">
-          <span className="text-blue-100 font-medium flex items-center gap-1">
+          <span className="text-blue-100 font-medium">
             {UI_TEXT.LABELS.PLATFORM_FEE}
           </span>
           <div className="flex items-center gap-2">
@@ -162,6 +146,11 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
           </span>
           <span className="font-bold text-green-300 tabular-nums">₹0.00</span>
         </div>
+      </div>
+
+      {/* Zero Markup Badge */}
+      <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full text-center mt-4 shadow-sm">
+        {UI_TEXT.LABELS.ZERO_MARKUP}
       </div>
 
       {/* Call to Action Button */}
