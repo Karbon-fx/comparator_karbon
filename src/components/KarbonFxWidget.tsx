@@ -229,8 +229,8 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
             </div>
 
-            <div className="px-4 sm:px-8 pb-8 sm:pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="">
+                <div className="grid grid-cols-1 md:grid-cols-3">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -373,10 +373,10 @@ const KarbonFxWidgetSkeleton = () => {
                     <div className="h-20 bg-gray-200 rounded-2xl"></div>
                 </div>
             </div>
-            <div className="px-4 sm:px-8 pb-8 sm:pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+            <div className="">
+                <div className="grid grid-cols-1 md:grid-cols-3">
                     {[...Array(3)].map((_, i) => (
-                        <div key={i} className={`rounded-2xl p-6 ${i === 0 ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                        <div key={i} className={`p-6 ${i === 0 ? 'bg-blue-100' : 'bg-gray-100'}`}>
                             <div className="flex items-center gap-3 mb-6">
                                 <div className="w-14 h-14 bg-gray-300 rounded-full"></div>
                                 <div className="h-6 w-24 bg-gray-300 rounded"></div>
