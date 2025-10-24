@@ -5,10 +5,8 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
 import CurrencyInput from 'react-currency-input-field';
-import { Slider } from '@/components/ui/slider';
-import { Info, RefreshCw, Plus, Minus, DollarSign } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { calculateMarkupPerUsd, calculateSavings, calculateTotalInr, convertFromLogScale, convertToLogScale, formatRate, formatNumber } from '@/lib/utils';
+import { Info, Plus, Minus } from 'lucide-react';
+import { calculateMarkupPerUsd, calculateSavings, calculateTotalInr, formatRate, formatNumber } from '@/lib/utils';
 import { sanitizeRateOfferedInput } from '@/lib/inputSanitizers';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -33,7 +31,11 @@ const AnimatedNumber = ({
   const motionValue = useMotionValue(0);
   const rounded = useTransform(motionValue, (latest) => {
     if (isNaN(latest)) return `${prefix}0.00`;
-    return `${prefix}${latest.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`
+    const formattedNumber = latest.toLocaleString('en-IN', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    return `${prefix}${formattedNumber}`;
   });
   const prevValue = useRef(0);
 
@@ -50,14 +52,14 @@ const AnimatedNumber = ({
     prevValue.current = value;
 
     return () => animation.stop();
-  }, [value, motionValue]);
+  }, [value, motionValue, decimals]);
 
   return <motion.span className={className}>{rounded}</motion.span>;
 };
 
 
 const BankIcon = () => (
-    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_24_7655)"> <path d="M2.5874 9.66222C2.5874 9.66222 2.5874 9.66222 2.58897 9.65637C4.0175 4.32502 9.50114 1.15882 14.8328 2.58742C20.17 4.01754 23.336 9.5014 21.9075 14.8328C21.9059 14.8386 21.9059 14.8386 21.9059 14.8386C20.4773 20.1702 14.9936 23.3361 9.65635 21.906C4.32474 20.4774 1.1588 14.9938 2.5874 9.66222Z" fill="url(#paint0_radial_24_7655)"/> </g> <defs> <radialGradient id="paint0_radial_24_7655" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16.5059 19.7451) rotate(-117.444) scale(18.5589 18.5589)"> <stop stop-color="#F59314"/> <stop offset="0.557323" stop-color="#E54C1D"/> <stop offset="0.796911" stop-color="#CF3921"/> <stop offset="1" stop-color="#85271B"/> </radialGradient> <clipPath id="clip0_24_7655"> <rect width="20" height="20" fill="white" transform="translate(5.17638) rotate(15)"/> </clipPath> </defs> </svg>
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clipPath="url(#clip0_24_7655)"> <path d="M2.5874 9.66222C2.5874 9.66222 2.5874 9.66222 2.58897 9.65637C4.0175 4.32502 9.50114 1.15882 14.8328 2.58742C20.17 4.01754 23.336 9.5014 21.9075 14.8328C21.9059 14.8386 21.9059 14.8386 21.9059 14.8386C20.4773 20.1702 14.9936 23.3361 9.65635 21.906C4.32474 20.4774 1.1588 14.9938 2.5874 9.66222Z" fill="url(#paint0_radial_24_7655)"/> </g> <defs> <radialGradient id="paint0_radial_24_7655" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16.5059 19.7451) rotate(-117.444) scale(18.5589 18.5589)"> <stop stopColor="#F59314"/> <stop offset="0.557323" stopColor="#E54C1D"/> <stop offset="0.796911" stopColor="#CF3921"/> <stop offset="1" stopColor="#85271B"/> </radialGradient> <clipPath id="clip0_24_7655"> <rect width="20" height="20" fill="white" transform="translate(5.17638) rotate(15)"/> </clipPath> </defs> </svg>
 );
 
 const PayPalIcon = () => (
@@ -159,40 +161,41 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
 export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: KarbonFxWidgetProps) => {
     const [usdAmount, setUsdAmount] = useState<number>(initialAmount);
     const [liveRate, setLiveRate] = useState<number | null>(null);
-    const [lastUpdated, setLastUpdated] = useState<string | null>(null);
-    const [isRefreshing, setIsRefreshing] = useState(false);
+    const [platformFeePercent, setPlatformFeePercent] = useState<string>('1.18');
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+        fetchLiveRate();
+    }, []);
 
     const [bankRate, setBankRate] = useState<string>('85.1718');
     const [paypalRate, setPaypalRate] = useState<string>('85.3107');
 
     const fetchLiveRate = async () => {
-        setIsRefreshing(true);
         try {
             const response = await fetch('/api/live-rate');
             if (!response.ok) throw new Error('Failed to fetch');
             const data = await response.json();
             if (data.rate) {
                 setLiveRate(data.rate);
-                setLastUpdated(new Date(data.timestamp).toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric'
-                }));
             }
         } catch (error) {
             console.error('Failed to fetch live rate:', error);
-        } finally {
-            setTimeout(() => setIsRefreshing(false), 500);
         }
     };
+    
+    const platformFeeAmount = useMemo(() => {
+      const feePercent = parseFloat(platformFeePercent) || 0;
+      const karbonTotal = calculateTotalInr(usdAmount, liveRate || 0);
+      return (karbonTotal * feePercent) / 100;
+    }, [platformFeePercent, usdAmount, liveRate]);
 
-    useEffect(() => {
-        fetchLiveRate();
-    }, []);
+    const finalRecipientAmount = useMemo(() => {
+      const karbonTotal = calculateTotalInr(usdAmount, liveRate || 0);
+      return karbonTotal - platformFeeAmount;
+    }, [usdAmount, liveRate, platformFeeAmount]);
 
-    const PLATFORM_FEE_PERCENT = 0.0118; // 1% + 18% GST on the 1%
-    const karbonTotalBeforeFee = useMemo(() => calculateTotalInr(usdAmount, liveRate || 0), [usdAmount, liveRate]);
-    const platformFee = useMemo(() => karbonTotalBeforeFee * PLATFORM_FEE_PERCENT, [karbonTotalBeforeFee]);
-    const karbonTotalInr = useMemo(() => karbonTotalBeforeFee - platformFee, [karbonTotalBeforeFee, platformFee]);
     
     const handleUsdChange = (value: string | undefined) => {
         let numValue = parseFloat(value || '0');
@@ -212,10 +215,12 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
         if (usdAmount > 100000) setUsdAmount(100000);
     };
 
+    if (!isClient) {
+        return null;
+    }
+
     return (
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
-            
-
             <div className="px-8 pt-10 pb-8">
                 <div className="mb-4">
                     <label className="block text-sm font-semibold text-karbon-ebony mb-3">
@@ -281,7 +286,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                         <div className="mb-6 pb-6 border-b border-white/20">
                             <p className="text-sm text-blue-100 mb-2">Recipient gets</p>
                             <AnimatedNumber
-                                value={karbonTotalInr}
+                                value={finalRecipientAmount}
                                 className="text-4xl font-bold tabular-nums"
                             />
                         </div>
@@ -291,23 +296,47 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                                 <span className="text-blue-100">Exchange rate</span>
                                 <span className="font-semibold tabular-nums">{formatRate(liveRate || 0)}</span>
                             </div>
-                            <div className="flex justify-between items-center">
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <span className="text-blue-100 flex items-center gap-1 cursor-help">
-                                                Platform Fee
-                                                <Info className="h-3 w-3 text-blue-200/80" />
-                                            </span>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>1% Platform Fee + 18% GST.</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                                <span className="font-semibold tabular-nums">
-                                    1.18%
+                           <div className="flex justify-between items-center">
+                                <span className="text-blue-100 flex items-center gap-1">
+                                    Platform Fee
+                                    <TooltipProvider>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Info className="h-3 w-3 text-blue-200" />
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Transaction processing fee (%)</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TooltipProvider>
                                 </span>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                    type="text"
+                                    value={platformFeePercent}
+                                    onChange={(e) => {
+                                        const value = e.target.value.replace(/[^0-9.]/g, '');
+                                        const parts = value.split('.');
+                                        if (parts.length <= 2 && (parts[1]?.length || 0) <= 2) {
+                                        setPlatformFeePercent(value);
+                                        }
+                                    }}
+                                    onBlur={() => {
+                                        const num = parseFloat(platformFeePercent);
+                                        if (isNaN(num) || num < 0) {
+                                        setPlatformFeePercent('0');
+                                        } else if (num > 10) {
+                                        setPlatformFeePercent('10');
+                                        }
+                                    }}
+                                    className="w-16 px-2 py-1 text-right font-medium bg-white/20 text-white rounded border border-white/30 focus:border-white focus:ring-1 focus:ring-white tabular-nums backdrop-blur-sm"
+                                    placeholder="0.00"
+                                    />
+                                    <span className="font-semibold">%</span>
+                                </div>
+                            </div>
+                            <div className="text-xs text-blue-100 -mt-2 text-right">
+                                = ₹{formatNumber(parseFloat(platformFeeAmount.toFixed(2)))}
                             </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-blue-100">Rate markup</span>
@@ -322,7 +351,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                         rate={parseFloat(bankRate)}
                         liveRate={liveRate || 0}
                         usdAmount={usdAmount}
-                        karbonTotal={karbonTotalInr}
+                        karbonTotal={finalRecipientAmount}
                         onRateChange={setBankRate}
                         delay={0.2}
                     />
@@ -333,7 +362,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                         rate={parseFloat(paypalRate)}
                         liveRate={liveRate || 0}
                         usdAmount={usdAmount}
-                        karbonTotal={karbonTotalInr}
+                        karbonTotal={finalRecipientAmount}
                         onRateChange={setPaypalRate}
                         delay={0.3}
                     />
@@ -343,4 +372,4 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
     );
 };
 
-
+    
