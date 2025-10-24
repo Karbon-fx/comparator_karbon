@@ -59,7 +59,7 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
       
       {/* Responsive input: full width on mobile, card-matched width on desktop */}
       <div 
-        className={`flex items-center bg-white rounded-2xl border-2 transition-all duration-200 w-full md:w-[338.67px] ${
+        className={`flex items-center bg-white rounded-2xl border-2 transition-all duration-200 w-full md:w-[1024] ${
           error ? 'border-red-300' : 'border-gray-200 focus-within:border-blue-500'
         }`}
       >
