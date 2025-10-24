@@ -196,7 +196,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                         Your client pays
                     </label>
                     <div className="relative">
-                        <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4">
+                        <div className="flex items-center bg-white rounded-2xl focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4">
                            <div className="flex items-center gap-2 sm:gap-3">
                              <USFlagIcon />
                              <span className="text-xl sm:text-3xl font-bold text-karbon-ebony">USD</span>
@@ -229,7 +229,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
             </div>
 
-            <div className="">
+            <div className="bg-transparent">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -244,7 +244,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                             animate={{ scale: 1, y: 0 }}
                             transition={{ type: 'spring', stiffness: 500, damping: 30, delay: 0.5 }}
                         >
-                            <div className="bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-full">
+                            <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                                 ✓ ZERO MARKUP
                             </div>
                         </motion.div>
@@ -403,4 +403,5 @@ const KarbonFxWidgetSkeleton = () => {
     );
 };
 
+    
     
