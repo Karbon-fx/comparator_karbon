@@ -113,22 +113,15 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                     </span>
                 </div>
             </div>
-
             {savings > 0 && (
-                <motion.div
-                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                    animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem' }}
-                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="pt-6 border-t border-gray-200"
-                >
+                 <div className="pt-6 border-t border-gray-200 mt-6">
                     <p className="text-sm text-gray-600 mb-2">You lose with {name}</p>
                     <AnimatedCounter
                         value={savings}
                         prefix="-₹"
                         className="text-2xl font-bold text-danger tabular-nums"
                     />
-                </motion.div>
+                </div>
             )}
         </motion.div>
     );
@@ -157,7 +150,6 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                 setLiveRate(data.rate);
             }
         } catch (error) {
-            // Error handling is silent
         }
     };
     
@@ -197,16 +189,16 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
     return (
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
-            <div className="px-8 pt-10 pb-8">
+            <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
                 <div className="mb-4">
-                    <label className="block text-sm font-semibold text-karbon-ebony mb-3">
+                    <label className="block text-base sm:text-lg font-semibold text-karbon-ebony mb-3">
                         Your client pays
                     </label>
                     <div className="relative">
-                        <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-6 py-4 shadow-sm">
-                           <div className="flex items-center gap-3">
+                        <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4 shadow-sm">
+                           <div className="flex items-center gap-2 sm:gap-3">
                              <USFlagIcon />
-                             <span className="text-4xl font-bold text-karbon-ebony">USD</span>
+                             <span className="text-xl sm:text-3xl font-bold text-karbon-ebony">USD</span>
                            </div>
                             <CurrencyInput
                                 id="usd-input"
@@ -215,18 +207,18 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                                 decimalsLimit={2}
                                 onValueChange={handleUsdChange}
                                 onBlur={handleUsdBlur}
-                                className="flex-1 text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums text-right pr-4"
+                                className="flex-1 text-2xl sm:text-4xl font-bold text-karbon-ebony bg-transparent border-0 outline-none focus:ring-0 tabular-nums text-right pr-2 sm:pr-4"
                                 placeholder="1,400"
                                 allowNegativeValue={false}
                                 maxLength={9}
                                 groupSeparator=","
                                 decimalSeparator="."
                             />
-                            <div className="flex gap-2 ml-4">
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setUsdAmount(Math.min(100000, usdAmount + 100))} className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-[#0066CC] hover:text-white transition-colors flex items-center justify-center">
+                            <div className="flex gap-1 sm:gap-2 ml-2 sm:ml-4">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setUsdAmount(Math.min(100000, usdAmount + 100))} className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-100 hover:bg-[#0066CC] hover:text-white transition-colors flex items-center justify-center">
                                     <Plus className="h-5 w-5" />
                                 </motion.button>
-                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setUsdAmount(Math.max(100, usdAmount - 100))} className="w-10 h-10 rounded-lg bg-gray-100 hover:bg-[#0066CC] hover:text-white transition-colors flex items-center justify-center">
+                                <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} onClick={() => setUsdAmount(Math.max(100, usdAmount - 100))} className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gray-100 hover:bg-[#0066CC] hover:text-white transition-colors flex items-center justify-center">
                                     <Minus className="h-5 w-5" />
                                 </motion.button>
                             </div>
@@ -236,8 +228,8 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
             </div>
 
-            <div className="px-8 pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="px-4 sm:px-8 pb-8 sm:pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -271,7 +263,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                             <p className="text-sm text-blue-100 mb-2">Recipient gets</p>
                             <AnimatedCounter
                                 value={finalRecipientAmount}
-                                className="text-4xl font-bold tabular-nums"
+                                className="text-3xl sm:text-4xl font-bold tabular-nums"
                             />
                         </div>
 
@@ -374,14 +366,14 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 const KarbonFxWidgetSkeleton = () => {
     return (
         <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden animate-pulse">
-            <div className="px-8 pt-10 pb-8">
+            <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
                 <div className="mb-4">
                     <div className="h-5 w-32 bg-gray-200 rounded mb-3"></div>
                     <div className="h-20 bg-gray-200 rounded-2xl"></div>
                 </div>
             </div>
-            <div className="px-8 pb-10">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="px-4 sm:px-8 pb-8 sm:pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
                     {[...Array(3)].map((_, i) => (
                         <div key={i} className={`rounded-2xl p-6 ${i === 0 ? 'bg-blue-100' : 'bg-gray-100'}`}>
                             <div className="flex items-center gap-3 mb-6">
