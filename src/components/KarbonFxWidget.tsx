@@ -1,8 +1,7 @@
 
-
 "use client";
 
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CurrencyInput from 'react-currency-input-field';
 import { Info, Plus, Minus } from 'lucide-react';
@@ -13,7 +12,22 @@ import { AnimatedCounter } from '@/components/AnimatedCounter';
 
 
 const BankIcon = () => (
-    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clipPath="url(#clip0_24_7655)"> <path d="M2.5874 9.66222C2.5874 9.66222 2.5874 9.66222 2.58897 9.65637C4.0175 4.32502 9.50114 1.15882 14.8328 2.58742C20.17 4.01754 23.336 9.5014 21.9075 14.8328C21.9059 14.8386 21.9059 14.8386 21.9059 14.8386C20.4773 20.1702 14.9936 23.3361 9.65635 21.906C4.32474 20.4774 1.1588 14.9938 2.5874 9.66222Z" fill="url(#paint0_radial_24_7655)"/> </g> <defs> <radialGradient id="paint0_radial_24_7655" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16.5059 19.7451) rotate(-117.444) scale(18.5589 18.5589)"> <stop stopColor="#F59314"/> <stop offset="0.557323" stopColor="#E54C1D"/> <stop offset="0.796911" stopColor="#CF3921"/> <stop offset="1" stopColor="#85271B"/> </radialGradient> <clipPath id="clip0_24_7655"> <rect width="20" height="20" fill="white" transform="translate(5.17638) rotate(15)"/> </clipPath> </defs> </svg>
+    <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clipPath="url(#clip0_24_7655)">
+            <path d="M2.5874 9.66222C2.5874 9.66222 2.5874 9.66222 2.58897 9.65637C4.0175 4.32502 9.50114 1.15882 14.8328 2.58742C20.17 4.01754 23.336 9.5014 21.9075 14.8328C21.9059 14.8386 21.9059 14.8386 21.9059 14.8386C20.4773 20.1702 14.9936 23.3361 9.65635 21.906C4.32474 20.4774 1.1588 14.9938 2.5874 9.66222Z" fill="url(#paint0_radial_24_7655)"/>
+        </g>
+        <defs>
+            <radialGradient id="paint0_radial_24_7655" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(16.5059 19.7451) rotate(-117.444) scale(18.5589 18.5589)">
+                <stop stopColor="#F59314"/>
+                <stop offset="0.557323" stopColor="#E54C1D"/>
+                <stop offset="0.796911" stopColor="#CF3921"/>
+                <stop offset="1" stopColor="#85271B"/>
+            </radialGradient>
+            <clipPath id="clip0_24_7655">
+                <rect width="20" height="20" fill="white" transform="translate(5.17638) rotate(15)"/>
+            </clipPath>
+        </defs>
+    </svg>
 );
 
 const PayPalIcon = () => (
@@ -308,9 +322,6 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                                     <span className="font-semibold">%</span>
                                 </div>
                             </div>
-                             <div className="text-xs text-blue-100 -mt-2 text-right opacity-80" suppressHydrationWarning>
-                                = ₹{formatNumber(parseFloat(platformFeeAmount.toFixed(2)))}
-                            </div>
                             <div className="flex justify-between items-center">
                                 <span className="text-blue-100">Rate markup</span>
                                 <span className="font-bold text-green-300 tabular-nums">₹0.00</span>
@@ -383,4 +394,6 @@ const KarbonFxWidgetSkeleton = () => {
         </div>
     );
 };
+    
+
     
