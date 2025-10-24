@@ -5,7 +5,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import CurrencyInput from 'react-currency-input-field';
 import { Info, Plus, Minus } from 'lucide-react';
-import { calculateMarkupPerUsd, calculateSavings, calculateTotalInr, formatRate, formatNumber } from '@/lib/utils';
+import { calculateMarkupPerUsd, calculateSavings, calculateTotalInr, formatRate } from '@/lib/utils';
 import { sanitizeRateOfferedInput } from '@/lib/inputSanitizers';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AnimatedCounter } from '@/components/AnimatedCounter';
@@ -109,7 +109,7 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
-                    <span className="font-semibold text-red-600 tabular-nums">
+                    <span className="font-semibold text-danger tabular-nums">
                         ₹{formatRate(markupPerUsd)}
                     </span>
                 </div>
@@ -124,11 +124,11 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="border-t border-gray-200"
                 >
-                    <p className="text-sm text-gray-600 mb-2">You save with Karbon</p>
+                    <p className="text-sm text-gray-600 mb-2">You lose with {name}</p>
                     <AnimatedCounter
                         value={savings}
-                        prefix="+₹"
-                        className="text-2xl font-bold text-success tabular-nums"
+                        prefix="-₹"
+                        className="text-2xl font-bold text-danger tabular-nums"
                     />
                 </motion.div>
             )}
@@ -327,6 +327,24 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                                 <span className="font-bold text-green-300 tabular-nums">₹0.00</span>
                             </div>
                         </div>
+                        <motion.a
+                            href="https://karbonfx.com/signup-v2-form?utm_source=karbonccomparator"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block mt-6 w-full"
+                            whileHover={{ scale: 1.03, boxShadow: '0 8px 20px rgba(0,0,0,0.3)' }}
+                            whileTap={{ scale: 0.98 }}
+                            transition={{ duration: 0.2 }}
+                        >
+                            <div className="bg-white text-[#0066CC] rounded-xl py-4 px-6 text-center font-bold text-lg shadow-lg hover:bg-opacity-95 transition-colors">
+                            Get Started
+                            <span className="ml-2">→</span>
+                            </div>
+                        </motion.a>
+
+                        <p className="text-center text-xs text-blue-100 mt-3 opacity-80">
+                            Sign up in 2 minutes • No hidden fees
+                        </p>
                     </motion.div>
 
                     <CompetitorCard
@@ -396,4 +414,5 @@ const KarbonFxWidgetSkeleton = () => {
 };
     
 
+    
     
