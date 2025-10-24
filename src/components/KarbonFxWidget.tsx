@@ -3,59 +3,13 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import CurrencyInput from 'react-currency-input-field';
 import { Info, Plus, Minus } from 'lucide-react';
 import { calculateMarkupPerUsd, calculateSavings, calculateTotalInr, formatRate, formatNumber } from '@/lib/utils';
 import { sanitizeRateOfferedInput } from '@/lib/inputSanitizers';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-
-interface KarbonFxWidgetProps {
-  initialAmount?: number;
-  compact?: boolean;
-}
-
-interface AnimatedNumberProps {
-  value: number;
-  className?: string;
-  prefix?: string;
-  decimals?: number;
-}
-
-const AnimatedNumber = ({ 
-  value, 
-  className = '', 
-  prefix = '₹',
-  decimals = 2 
-}: AnimatedNumberProps) => {
-  const motionValue = useMotionValue(0);
-  const rounded = useTransform(motionValue, (latest) => {
-    if (isNaN(latest)) return `${prefix}0.00`;
-    const formattedNumber = latest.toLocaleString('en-IN', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      });
-    return `${prefix}${formattedNumber}`;
-  });
-  const prevValue = useRef(0);
-
-  useEffect(() => {
-    if (isNaN(value)) return;
-    const animation = animate(prevValue.current, value, {
-      duration: 0.6,
-      ease: 'easeOut',
-      onUpdate: (latest) => {
-        motionValue.set(latest);
-      }
-    });
-
-    prevValue.current = value;
-
-    return () => animation.stop();
-  }, [value, motionValue, decimals]);
-
-  return <motion.span className={className}>{rounded}</motion.span>;
-};
+import { AnimatedCounter } from '@/components/AnimatedCounter';
 
 
 const BankIcon = () => (
@@ -63,11 +17,14 @@ const BankIcon = () => (
 );
 
 const PayPalIcon = () => (
-    <svg width="38" height="45" viewBox="0 0 38 45" fill="none" xmlns="http://www.w3.org/2000/svg"> <mask id="mask0_0_8" style={{maskType:"luminance"}} maskUnits="userSpaceOnUse" x="0" y="0" width="38" height="45"> <path d="M0 0H37.35V45H0V0Z" fill="white"/> </mask> <g mask="url(#mask0_0_8)"> <path d="M31.858 10.35C31.858 15.924 26.714 22.5 18.931 22.5H11.434L11.066 24.822L9.317 36H0L5.605 0H20.7C25.783 0 29.782 2.833 31.255 6.77C31.6798 7.91467 31.8844 9.12933 31.858 10.35Z" fill="#002991"/> <path d="M37.228 20.7C36.7307 23.7214 35.1744 26.4672 32.8376 28.446C30.5008 30.4248 27.5361 31.5074 24.474 31.5H19.268L17.101 45H7.834L9.317 36L11.067 24.822L11.434 22.5H18.931C26.704 22.5 31.858 15.924 31.858 10.35C35.683 12.324 37.913 16.313 37.228 20.7Z" fill="#60CDFF"/> <path d="M31.858 10.35C30.254 9.511 28.309 9 26.192 9H13.552L11.434 22.5H18.931C26.704 22.5 31.858 15.924 31.858 10.35Z" fill="#008CFF"/> </g> </svg>
+    <svg width="24" height="29" viewBox="0 0 24 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.2574 6.70833C20.2574 10.3208 16.9833 14.5833 11.9687 14.5833H7.21458L6.98333 16.0896L5.875 23.3333H0L3.53125 0H13.0625C16.2708 0 18.7917 1.83333 19.7292 4.38542C20.0035 5.12604 20.1345 5.91458 20.2574 6.70833Z" fill="#002991"/>
+        <path d="M23.5 13.4167C23.1875 15.375 22.1875 17.1562 20.7292 18.4375C19.2708 19.7187 17.375 20.4167 15.4375 20.4167H12.1458L10.7917 29.1667H4.9375L5.875 23.3333L6.98333 16.0896L7.21458 14.5833H11.9687C16.9792 14.5833 20.2574 10.3208 20.2574 6.70833C22.5625 7.98958 23.9375 10.5833 23.5 13.4167Z" fill="#008CFF"/>
+    </svg>
 );
 
 const USFlagIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded-sm">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded-sm shadow-md">
         <path fill="#B22234" d="M0 0h20v12H0z"/>
         <path fill="#fff" d="M0 1h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0z"/>
         <path fill="#3C3B6E" d="M0 0h10v6H0z"/>
@@ -108,7 +65,7 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
 
             <div className="mb-6 pb-6 border-b border-gray-200">
                 <p className="text-sm text-gray-600 mb-2">Recipient gets</p>
-                <AnimatedNumber
+                <AnimatedCounter
                     value={totalInr}
                     className="text-3xl font-bold text-karbon-ebony tabular-nums"
                 />
@@ -144,21 +101,29 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                 </div>
             </div>
 
+            <AnimatePresence>
             {savings > 0 && (
-                <div className="mt-6 pt-6 border-t border-gray-200">
+                <motion.div 
+                    initial={{ opacity: 0, height: 0, marginTop: 0, paddingTop: 0 }}
+                    animate={{ opacity: 1, height: 'auto', marginTop: '1.5rem', paddingTop: '1.5rem' }}
+                    exit={{ opacity: 0, height: 0, marginTop: 0, paddingTop: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="border-t border-gray-200"
+                >
                     <p className="text-sm text-gray-600 mb-2">You save with Karbon</p>
-                    <AnimatedNumber
+                    <AnimatedCounter
                         value={savings}
                         prefix="+₹"
                         className="text-2xl font-bold text-success tabular-nums"
                     />
-                </div>
+                </motion.div>
             )}
+            </AnimatePresence>
         </motion.div>
     );
 };
 
-export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: KarbonFxWidgetProps) => {
+export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initialAmount?: number; compact?: boolean;}) => {
     const [usdAmount, setUsdAmount] = useState<number>(initialAmount);
     const [liveRate, setLiveRate] = useState<number | null>(null);
     const [platformFeePercent, setPlatformFeePercent] = useState<string>('1.18');
@@ -216,7 +181,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
     };
 
     if (!isClient) {
-        return null;
+        return <KarbonFxWidgetSkeleton />;
     }
 
     return (
@@ -268,11 +233,19 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                         transition={{ delay: 0.1 }}
                         className="relative bg-gradient-to-br from-[#0066CC] to-[#6495ED] rounded-2xl p-6 text-white shadow-2xl shadow-blue-500/30 md:col-span-1 ring-4 ring-[#0066CC] ring-offset-4"
                     >
-                        <div className="absolute -top-3 -right-3">
+                         <AnimatePresence>
+                        <motion.div
+                            className="absolute -top-3 -right-3"
+                            initial={{ scale: 0, y: -10 }}
+                            animate={{ scale: 1, y: 0 }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 30, delay: 0.5 }}
+                        >
                             <div className="bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
                                 ✓ ZERO MARKUP
                             </div>
-                        </div>
+                        </motion.div>
+                        </AnimatePresence>
+
 
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2">
@@ -285,7 +258,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
 
                         <div className="mb-6 pb-6 border-b border-white/20">
                             <p className="text-sm text-blue-100 mb-2">Recipient gets</p>
-                            <AnimatedNumber
+                            <AnimatedCounter
                                 value={finalRecipientAmount}
                                 className="text-4xl font-bold tabular-nums"
                             />
@@ -305,7 +278,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                                                 <Info className="h-3 w-3 text-blue-200" />
                                             </TooltipTrigger>
                                             <TooltipContent>
-                                                <p>Transaction processing fee (%)</p>
+                                                <p>1% Platform Fee + 18% GST</p>
                                             </TooltipContent>
                                         </Tooltip>
                                     </TooltipProvider>
@@ -335,7 +308,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
                                     <span className="font-semibold">%</span>
                                 </div>
                             </div>
-                            <div className="text-xs text-blue-100 -mt-2 text-right">
+                             <div className="text-xs text-blue-100 -mt-2 text-right opacity-80" suppressHydrationWarning>
                                 = ₹{formatNumber(parseFloat(platformFeeAmount.toFixed(2)))}
                             </div>
                             <div className="flex justify-between items-center">
@@ -372,4 +345,42 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: Karbon
     );
 };
 
+const KarbonFxWidgetSkeleton = () => {
+    return (
+        <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden animate-pulse">
+            <div className="px-8 pt-10 pb-8">
+                <div className="mb-4">
+                    <div className="h-5 w-32 bg-gray-200 rounded mb-3"></div>
+                    <div className="h-20 bg-gray-200 rounded-2xl"></div>
+                </div>
+            </div>
+            <div className="px-8 pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {[...Array(3)].map((_, i) => (
+                        <div key={i} className={`rounded-2xl p-6 ${i === 0 ? 'bg-blue-100' : 'bg-gray-100'}`}>
+                            <div className="flex items-center gap-3 mb-6">
+                                <div className="w-14 h-14 bg-gray-300 rounded-full"></div>
+                                <div className="h-6 w-24 bg-gray-300 rounded"></div>
+                            </div>
+                            <div className="mb-6 pb-6 border-b border-gray-300">
+                                <div className="h-4 w-20 bg-gray-300 rounded mb-2"></div>
+                                <div className="h-10 w-32 bg-gray-300 rounded"></div>
+                            </div>
+                            <div className="space-y-4 text-sm">
+                                <div className="flex justify-between items-center">
+                                    <div className="h-5 w-24 bg-gray-300 rounded"></div>
+                                    <div className="h-8 w-20 bg-gray-300 rounded"></div>
+                                </div>
+                                <div className="flex justify-between items-center">
+                                    <div className="h-5 w-20 bg-gray-300 rounded"></div>
+                                    <div className="h-5 w-16 bg-gray-300 rounded"></div>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
     
