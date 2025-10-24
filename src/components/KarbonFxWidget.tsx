@@ -230,7 +230,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
             </div>
 
             <div className="">
-                <div className="grid grid-cols-1 md:grid-cols-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -402,3 +402,5 @@ const KarbonFxWidgetSkeleton = () => {
         </div>
     );
 };
+
+    
