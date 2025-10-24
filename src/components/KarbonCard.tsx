@@ -130,16 +130,6 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
         <div className="flex justify-between items-center">
           <span className="text-blue-100 font-medium flex items-center gap-1">
             {UI_TEXT.LABELS.PLATFORM_FEE}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Info className="h-3 w-3 text-blue-200 cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{UI_TEXT.TOOLTIPS.PLATFORM_FEE}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
           </span>
           <div className="flex items-center gap-2">
             <input
@@ -172,11 +162,6 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
           </span>
           <span className="font-bold text-green-300 tabular-nums">₹0.00</span>
         </div>
-      </div>
-
-      {/* Zero Markup Badge */}
-      <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full text-center mt-4 shadow-sm">
-        {UI_TEXT.LABELS.ZERO_MARKUP}
       </div>
 
       {/* Call to Action Button */}
