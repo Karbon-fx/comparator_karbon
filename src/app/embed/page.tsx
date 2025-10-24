@@ -25,7 +25,7 @@ export default function EmbedPage() {
         };
     }, []);
   return (
-    <main>
+    <main className="bg-transparent">
         <KarbonFxWidget />
     </main>
   );
