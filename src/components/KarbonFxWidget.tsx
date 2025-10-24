@@ -38,7 +38,7 @@ const PayPalIcon = () => (
 );
 
 const USFlagIcon = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded-sm shadow-md">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 12" width="36" height="24" className="rounded-sm">
         <path fill="#B22234" d="M0 0h20v12H0z"/>
         <path fill="#fff" d="M0 1h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0zm0 2h20v1H0z"/>
         <path fill="#3C3B6E" d="M0 0h10v6H0z"/>
@@ -68,7 +68,7 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay }}
-            className="bg-white rounded-2xl p-6 border-2 border-gray-200 transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+            className="bg-white rounded-2xl p-6 border-2 border-gray-200 transition-all duration-300 hover:-translate-y-1"
         >
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center">
@@ -189,14 +189,14 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
     }
 
     return (
-        <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden">
+        <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl border border-gray-200 overflow-hidden">
             <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
                 <div className="mb-4">
                     <label className="block text-base sm:text-lg font-semibold text-karbon-ebony mb-3">
                         Your client pays
                     </label>
                     <div className="relative">
-                        <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4 shadow-sm">
+                        <div className="flex items-center bg-white rounded-2xl border-2 border-gray-200 focus-within:border-[#0066CC] transition-all duration-200 px-3 sm:px-6 py-4">
                            <div className="flex items-center gap-2 sm:gap-3">
                              <USFlagIcon />
                              <span className="text-xl sm:text-3xl font-bold text-karbon-ebony">USD</span>
@@ -235,7 +235,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
-                        className="relative bg-gradient-to-br from-[#0066CC] to-[#6495ED] rounded-2xl p-6 text-white shadow-2xl shadow-blue-500/30 md:col-span-1 ring-4 ring-[#0066CC] ring-offset-4"
+                        className="relative bg-gradient-to-br from-[#0066CC] to-[#6495ED] rounded-2xl p-6 text-white md:col-span-1 ring-4 ring-[#0066CC] ring-offset-4"
                     >
                          <AnimatePresence>
                         <motion.div
@@ -244,7 +244,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                             animate={{ scale: 1, y: 0 }}
                             transition={{ type: 'spring', stiffness: 500, damping: 30, delay: 0.5 }}
                         >
-                            <div className="bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg">
+                            <div className="bg-green-500 text-white text-xs font-bold px-4 py-2 rounded-full">
                                 ✓ ZERO MARKUP
                             </div>
                         </motion.div>
@@ -322,11 +322,11 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block mt-6 w-full"
-                            whileHover={{ scale: 1.03, boxShadow: '0 8px 20px rgba(0,0,0,0.3)' }}
+                            whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.98 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <div className="bg-white text-[#0066CC] rounded-xl py-4 px-6 text-center font-bold text-lg shadow-lg hover:bg-opacity-95 transition-colors">
+                            <div className="bg-white text-[#0066CC] rounded-xl py-4 px-6 text-center font-bold text-lg hover:bg-opacity-95 transition-colors">
                             Get Started
                             <span className="ml-2">→</span>
                             </div>
@@ -366,7 +366,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
 
 const KarbonFxWidgetSkeleton = () => {
     return (
-        <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden animate-pulse">
+        <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-white rounded-3xl border border-gray-200 overflow-hidden animate-pulse">
             <div className="px-4 sm:px-8 pt-8 sm:pt-10 pb-8">
                 <div className="mb-4">
                     <div className="h-5 w-32 bg-gray-200 rounded mb-3"></div>
