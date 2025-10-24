@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -158,7 +157,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                 setLiveRate(data.rate);
             }
         } catch (error) {
-            console.error('Failed to fetch live rate:', error);
+            // Error handling is silent
         }
     };
     
@@ -410,7 +409,3 @@ const KarbonFxWidgetSkeleton = () => {
         </div>
     );
 };
-    
-
-    
-    

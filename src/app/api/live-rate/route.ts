@@ -63,14 +63,9 @@ export async function GET() {
       timestamp: now,
     };
     
-    if (process.env.NODE_ENV !== 'production') {
-      console.log('Live rate fetched:', inrRate);
-    }
-
     return NextResponse.json(responsePayload);
 
   } catch (error) {
-    console.error('Error in /api/live-rate:', error);
     return NextResponse.json(
       { error: 'An internal server error occurred.' },
       { status: 500 }
