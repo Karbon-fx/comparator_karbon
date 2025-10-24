@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -80,7 +81,7 @@ const CompetitorCard = ({ name, icon, rate, liveRate, usdAmount, karbonTotal, on
                 <p className="text-sm text-gray-600 mb-2">Recipient gets</p>
                 <AnimatedCounter
                     value={totalInr}
-                    className="text-3xl font-bold text-karbon-ebony tabular-nums"
+                    className="text-2xl font-bold text-karbon-ebony tabular-nums"
                 />
             </div>
 
@@ -263,7 +264,7 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                             <p className="text-sm text-blue-100 mb-2">Recipient gets</p>
                             <AnimatedCounter
                                 value={finalRecipientAmount}
-                                className="text-3xl sm:text-4xl font-bold tabular-nums"
+                                className="text-2xl sm:text-3xl font-bold tabular-nums"
                             />
                         </div>
 
@@ -401,3 +402,5 @@ const KarbonFxWidgetSkeleton = () => {
         </div>
     );
 };
+
+    
