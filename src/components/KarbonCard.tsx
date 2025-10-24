@@ -1,9 +1,10 @@
 /**
- * Karbon Card Component - Tooltips removed
+ * Karbon Card Component - With Microsoft Clarity tracking
  */
 
 import React from 'react';
 import { motion } from 'framer-motion';
+import { trackGetStartedClick } from '@/lib/clarity';
 import { formatRate } from '@/lib/utils';
 import { 
   ANIMATION_CONFIG, 
@@ -65,6 +66,21 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+  // Calculate USD amount for tracking
+  const calculateUsdAmount = () => {
+    if (displayRate > 0) {
+      return displayAmount / displayRate;
+    }
+    return 0;
+  };
+
+  // Handle Get Started click with tracking
+  const handleGetStartedClick = () => {
+    const usdAmount = calculateUsdAmount();
+    const totalSavings = platformFeeAmount || 0; // You can calculate actual savings vs competitors here
+    trackGetStartedClick(usdAmount, totalSavings);
+  };
 
   return (
     <motion.div
@@ -153,7 +169,7 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
         {UI_TEXT.LABELS.ZERO_MARKUP}
       </div>
 
-      {/* Call to Action Button */}
+      {/* Call to Action Button with Tracking */}
       <motion.a
         href={EXTERNAL_LINKS.SIGNUP}
         {...EXTERNAL_LINKS.SECURITY_ATTRIBUTES}
@@ -161,6 +177,7 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
         whileHover={{ scale: ANIMATION_CONFIG.SCALES.HOVER_UP }}
         whileTap={{ scale: ANIMATION_CONFIG.SCALES.HOVER_DOWN }}
         transition={{ duration: ANIMATION_CONFIG.DURATIONS.HOVER_SCALE }}
+        onClick={handleGetStartedClick}
       >
         <div className="bg-white text-blue-600 rounded-xl py-4 px-6 text-center font-bold text-lg hover:bg-blue-50 transition-colors shadow-sm">
           {UI_TEXT.LABELS.GET_STARTED}

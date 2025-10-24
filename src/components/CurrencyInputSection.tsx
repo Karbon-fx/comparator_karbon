@@ -4,6 +4,7 @@
 
 import React from 'react';
 import CurrencyInput from 'react-currency-input-field';
+import { trackCalculatorAmount } from '@/lib/clarity';
 import { CURRENCY_LIMITS, UI_TEXT } from '@/lib/constants';
 
 const USFlagIcon = () => (
@@ -42,6 +43,11 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
       onChange(CURRENCY_LIMITS.USD.MAX);
     } else {
       onChange(numValue);
+    }
+
+    // Track the amount entered
+    if (numValue > 0) {
+      trackCalculatorAmount(numValue);
     }
   };
 
