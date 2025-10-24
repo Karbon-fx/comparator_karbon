@@ -237,19 +237,6 @@ export const KarbonFxWidget = ({ initialAmount = 1400, compact = false }: {initi
                         transition={{ delay: 0.1 }}
                         className="relative bg-gradient-to-br from-[#0066CC] to-[#6495ED] rounded-2xl p-6 text-white md:col-span-1"
                     >
-                         <AnimatePresence>
-                        <motion.div
-                            className="absolute -top-3 -right-3"
-                            initial={{ scale: 0, y: -10 }}
-                            animate={{ scale: 1, y: 0 }}
-                            transition={{ type: 'spring', stiffness: 500, damping: 30, delay: 0.5 }}
-                        >
-                            <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
-                                ✓ ZERO MARKUP
-                            </div>
-                        </motion.div>
-                        </AnimatePresence>
-
 
                         <div className="flex items-center gap-3 mb-6">
                             <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center p-2">
