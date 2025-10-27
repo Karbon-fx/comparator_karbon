@@ -2,9 +2,9 @@
  * Responsive Currency Input Section - Adapts to screen size while matching card alignment
  */
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import CurrencyInput from 'react-currency-input-field';
-import { trackCalculatorAmount } from '@/lib/clarity';
+import { trackCalculatorAmount, trackSessionStart } from '@/lib/clarity';
 import { CURRENCY_LIMITS, UI_TEXT } from '@/lib/constants';
 
 const USFlagIcon = () => (
@@ -25,6 +25,14 @@ interface CurrencyInputSectionProps {
   className?: string;
 }
 
+function useDebounce(fn: (...args: any[]) => void, delay = 300) {
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  return (...args: any[]) => {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => fn(...args), delay);
+  };
+}
+
 export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
   value,
   onChange,
@@ -33,6 +41,22 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
   error,
   className = '',
 }) => {
+  const hasTrackedSession = useRef(false);
+
+  // Track session start only once
+  useEffect(() => {
+    if (!hasTrackedSession.current && value > 0) {
+      trackSessionStart(value);
+      hasTrackedSession.current = true;
+    }
+  }, [value]);
+
+  const debouncedTrackAmount = useDebounce((amt: number) => {
+    if (amt > 0) {
+      trackCalculatorAmount(amt);
+    }
+  }, 300);
+
   const handleValueChange = (val: string | undefined) => {
     let numValue = parseFloat(val || '0');
     if (isNaN(numValue)) {
@@ -41,19 +65,22 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
 
     if (numValue > CURRENCY_LIMITS.USD.MAX) {
       onChange(CURRENCY_LIMITS.USD.MAX);
+      debouncedTrackAmount(CURRENCY_LIMITS.USD.MAX);
     } else {
       onChange(numValue);
-    }
-
-    // Track the amount entered
-    if (numValue > 0) {
-      trackCalculatorAmount(numValue);
+      debouncedTrackAmount(numValue);
     }
   };
 
   const handleBlur = () => {
     if (value < CURRENCY_LIMITS.USD.MIN) onChange(CURRENCY_LIMITS.USD.MIN);
     if (value > CURRENCY_LIMITS.USD.MAX) onChange(CURRENCY_LIMITS.USD.MAX);
+    
+    // Track final committed value on blur
+    if (value > 0) {
+      trackCalculatorAmount(value);
+    }
+    
     onBlur?.();
   };
 
@@ -63,20 +90,16 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
         {UI_TEXT.LABELS.YOUR_CLIENT_PAYS}
       </label>
       
-      {/* Responsive input: full width on mobile, card-matched width on desktop */}
       <div 
         className={`flex items-center bg-white rounded-2xl border-2 transition-all duration-200 w-full md:w-[1024] ${
           error ? 'border-red-300' : 'border-gray-200 focus-within:border-blue-500'
         }`}
       >
-        
-        {/* Currency section - responsive padding */}
         <div className="flex items-center gap-2 px-3 sm:px-4 py-3 border-r border-gray-200">
           <USFlagIcon />
           <span className="text-base sm:text-lg md:text-xl font-bold text-gray-900">USD</span>
         </div>
         
-        {/* Amount input - responsive text size */}
         <div className="flex-1 px-2 sm:px-3 md:px-4 py-3">
           <CurrencyInput
             id="usd-input"
@@ -96,7 +119,6 @@ export const CurrencyInputSection: React.FC<CurrencyInputSectionProps> = ({
         </div>
       </div>
       
-      {/* Only show error message if there's an error */}
       {error && (
         <p className="text-red-600 text-sm mt-2">{error}</p>
       )}

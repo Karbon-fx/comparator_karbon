@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { trackGetStartedClick } from '@/lib/clarity';
+import { trackGetStartedClick, trackCardInteraction } from '@/lib/clarity';
 import { formatRate } from '@/lib/utils';
 import { 
   ANIMATION_CONFIG, 
@@ -79,7 +79,7 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
   const handleGetStartedClick = () => {
     const usdAmount = calculateUsdAmount();
     const totalSavings = platformFeeAmount || 0; // You can calculate actual savings vs competitors here
-    trackGetStartedClick(usdAmount, totalSavings);
+    trackGetStartedClick(usdAmount, totalSavings, 'karbon');
   };
 
   return (
@@ -88,6 +88,8 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
       className={`relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 rounded-2xl p-6 text-white shadow-lg ${className}`}
+      onMouseEnter={() => trackCardInteraction('karbon', 'hover')}
+      onClick={() => trackCardInteraction('karbon', 'click')}
     >
       {/* Development indicator for stale rates */}
       {process.env.NODE_ENV === 'development' && isRateStale && (

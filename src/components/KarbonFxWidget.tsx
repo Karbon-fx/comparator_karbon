@@ -14,8 +14,8 @@ import { useExchangeRate } from '@/hooks/useExchangeRate';
 import { useCalculations } from '@/hooks/useCalculations';
 import { useValidation } from '@/hooks/useValidation';
 import { CURRENCY_LIMITS, API_CONFIG } from '@/lib/constants';
+import { trackFeeComparison } from '@/lib/clarity';
 import type { KarbonFxWidgetProps } from '@/types';
-
 
 const KarbonFxWidgetSkeleton = () => (
   <div className="karbon-fx-widget w-full max-w-5xl mx-auto bg-transparent overflow-hidden animate-pulse">
@@ -65,7 +65,7 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
   );
 
   // Custom hooks
-  const { rate: liveRate, loading, error } = useExchangeRate(true, API_CONFIG.CACHE_TTL);
+  const { rate: liveRate, loading, error } = useExchangeRate(true);
   const { calculations, summary, updateAmount, updateRate, updatePlatformFee } = useCalculations({
     liveRate,
     initialAmount,
@@ -86,6 +86,27 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
       onRateUpdate?.(liveRate);
     }
   }, [liveRate, onRateUpdate]);
+
+  // Track fee comparisons when calculations update
+  useEffect(() => {
+    if (summary.usdAmount > 0 && liveRate?.rate) {
+      const paypalData = summary.competitorComparison.find(c => c.name.toLowerCase() === 'paypal');
+      const bankData = summary.competitorComparison.find(c => c.name.toLowerCase() === 'bank');
+      
+      if (paypalData && bankData) {
+        const paypalFee = (0.044 * summary.usdAmount + 0.30) * liveRate.rate;
+        const bankMarkup = (liveRate.rate - bankData.rate) * summary.usdAmount;
+        const karbonSavings = paypalFee + bankMarkup;
+        
+        trackFeeComparison(
+          summary.usdAmount,
+          paypalFee,
+          bankMarkup,
+          karbonSavings
+        );
+      }
+    }
+  }, [summary.usdAmount, summary.competitorComparison, liveRate]);
 
   const handleAmountChange = (amount: number) => {
     updateAmount(amount);
@@ -127,7 +148,8 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
       </div>
 
       <div className="bg-transparent">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-1 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-1 items-stretch">
+          {/* First position: Karbon Card (unchanged) */}
           <KarbonCard
             recipientAmount={summary.netInr}
             exchangeRate={liveRate}
@@ -136,19 +158,7 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
             onPlatformFeeChange={handlePlatformFeeChange}
           />
 
-          <CompetitorCard
-            name="Bank"
-            icon={<BankIcon />}
-            rate={bankData?.rate || 0}
-            liveRate={liveRate?.rate || 0}
-            usdAmount={summary.usdAmount}
-            karbonTotal={summary.netInr}
-            onRateChange={handleBankRateChange}
-            delay={0.2}
-            isLoading={loading.isLoading}
-            hasError={error.hasError}
-          />
-
+          {/* Second position: PayPal */}
           <CompetitorCard
             name="PayPal"
             icon={<PayPalIcon />}
@@ -157,6 +167,20 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
             usdAmount={summary.usdAmount}
             karbonTotal={summary.netInr}
             onRateChange={handlePaypalRateChange}
+            delay={0.2}
+            isLoading={loading.isLoading}
+            hasError={error.hasError}
+          />
+
+          {/* Third position: Bank */}
+          <CompetitorCard
+            name="Bank"
+            icon={<BankIcon />}
+            rate={bankData?.rate || 0}
+            liveRate={liveRate?.rate || 0}
+            usdAmount={summary.usdAmount}
+            karbonTotal={summary.netInr}
+            onRateChange={handleBankRateChange}
             delay={0.3}
             isLoading={loading.isLoading}
             hasError={error.hasError}
