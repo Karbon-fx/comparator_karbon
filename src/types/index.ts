@@ -48,6 +48,8 @@ export interface CompetitorCardProps {
   isLoading?: boolean;
   hasError?: boolean;
   className?: string;
+  bankCharges?: number;  // Add this new prop
+  onBankChargesChange?: (charges: string) => void;  // Add this new prop
 }
 
 export interface AnimatedCounterProps {

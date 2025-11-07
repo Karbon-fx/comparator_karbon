@@ -5,7 +5,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { trackGetStartedClick, trackCardInteraction } from '@/lib/clarity';
-import { formatRate } from '@/lib/utils';
+import { formatRate, calculateSavings } from '@/lib/utils';
 import { 
   ANIMATION_CONFIG, 
   UI_TEXT, 
@@ -78,8 +78,9 @@ export const KarbonCard: React.FC<KarbonCardProps> = ({
   // Handle Get Started click with tracking
   const handleGetStartedClick = () => {
     const usdAmount = calculateUsdAmount();
-    const totalSavings = platformFeeAmount || 0; // You can calculate actual savings vs competitors here
-    trackGetStartedClick(usdAmount, totalSavings, 'karbon');
+    // Fixed: trackGetStartedClick expects 3 arguments (usdAmount, totalSavings, provider)
+    // For Karbon, totalSavings is 0 since it's the baseline
+    trackGetStartedClick(usdAmount, 0, 'karbon');
   };
 
   return (

@@ -63,6 +63,7 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
   const [platformFeePercent, setPlatformFeePercent] = useState(
     CURRENCY_LIMITS.PLATFORM_FEE.DEFAULT.toString()
   );
+  const [bankCharges, setBankCharges] = useState(0); // Add bank charges state
 
   // Custom hooks
   const { rate: liveRate, loading, error } = useExchangeRate(true);
@@ -128,6 +129,11 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
     updateRate('paypal', numValue);
   };
 
+  const handleBankChargesChange = (value: string) => {
+    const numValue = parseFloat(value) || 0;
+    setBankCharges(numValue);
+  };
+
   if (!isClient) {
     return <KarbonFxWidgetSkeleton />;
   }
@@ -172,7 +178,7 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
             hasError={error.hasError}
           />
 
-          {/* Third position: Bank */}
+          {/* Third position: Bank - WITH bank charges props */}
           <CompetitorCard
             name="Bank"
             icon={<BankIcon />}
@@ -184,6 +190,8 @@ const KarbonFxWidgetInner: React.FC<KarbonFxWidgetProps> = ({
             delay={0.3}
             isLoading={loading.isLoading}
             hasError={error.hasError}
+            bankCharges={bankCharges}
+            onBankChargesChange={handleBankChargesChange}
           />
         </div>
       </div>
