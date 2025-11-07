@@ -140,7 +140,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className={`bg-white rounded-2xl p-6 border border-gray-200 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1 relative overflow-visible ${
+      className={`bg-white rounded-2xl p-6 border border-gray-200 transition-all duration-300 hover:-translate-y-1 relative overflow-visible ${
         isLoading ? 'opacity-75' : ''
       } ${hasError ? 'border-red-300 bg-red-50' : ''} ${className}`}
       onMouseEnter={handleCardHover}
@@ -162,7 +162,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
       {/* Recipient Amount - Consistent spacing */}
       <div className="mb-6 pb-6 border-b border-gray-200">
         <p className="text-sm text-gray-600 mb-2 font-medium">{UI_TEXT.LABELS.RECIPIENT_GETS}</p>
-        <div className="text-2xl sm:text-3xl font-bold text-gray-900 tabular-nums leading-tight">
+        <div className="text-2xl font-bold text-gray-900 tabular-nums leading-tight">
           {formattedTotal}
         </div>
       </div>
@@ -171,7 +171,7 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
       <div className="space-y-4 text-sm">
         {/* Exchange Rate Row - Aligned properly */}
         <div className="flex justify-between items-center min-h-[32px]">
-          <span className="text-gray-600 font-medium flex-shrink-0">{UI_TEXT.LABELS.EXCHANGE_RATE}</span>
+          <span className="text-gray-600 font-medium flex-shrink-0">{UI_TEXT.LABELS.UPWORK_RATE}</span>
           <div className="flex-shrink-0 min-w-[112px] text-right">
             {isPayPal ? (
               <span className="font-medium text-gray-900 tabular-nums inline-block">
@@ -204,80 +204,6 @@ export const CompetitorCard: React.FC<CompetitorCardProps> = ({
               <span className={`font-semibold tabular-nums ${markupValueClass}`}>
                 {markupValue}
               </span>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger 
-                    asChild
-                    onMouseEnter={handleTooltipView}
-                  >
-                    <Info className="h-3 w-3 text-gray-400 cursor-help hover:text-gray-600 transition-colors" />
-                  </TooltipTrigger>
-                  <TooltipContent 
-                    side="bottom"
-                    align="end"
-                    sideOffset={5}
-                    alignOffset={-10}
-                    className="bg-slate-800 text-white px-0 py-0 text-sm rounded-lg shadow-xl border-0 z-50 max-w-[260px] w-[260px]"
-                    avoidCollisions={true}
-                  >
-                    {isPayPal ? (
-                      <div className="p-3">
-                        <p className="font-semibold text-white mb-2 text-center text-xs">PayPal Fee Breakdown:</p>
-                        <div className="text-blue-200 text-xs">
-                          <p className="mb-2">Transaction fee (4.4% + $0.30) + Currency conversion fee (4%)</p>
-                        </div>
-                        
-                        {/* Clean aligned breakdown table */}
-                        <div className="bg-slate-700 rounded p-2 mt-2">
-                          <div className="space-y-1 text-xs">
-                            <div className="flex justify-between items-center">
-                              <span className="text-blue-300">• Transaction:</span>
-                              <span className="text-white font-mono">₹{paypalTransactionFeeInr.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-blue-300">• Conversion:</span>
-                              <span className="text-white font-mono">₹{paypalConversionFeeInr.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                            </div>
-                            <div className="border-t border-slate-600 pt-1 mt-1">
-                              <div className="flex justify-between items-center">
-                                <span className="text-white font-medium">Total:</span>
-                                <span className="text-white font-semibold font-mono">₹{totalPaypalFeesInr.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-3">
-                        <p className="font-semibold text-white mb-2 text-center text-xs">Bank Markup Breakdown:</p>
-                        <div className="text-orange-200 text-xs">
-                          <p className="mb-2">Additional cost above market exchange rate</p>
-                        </div>
-                        
-                        {/* Clean aligned breakdown table for Bank */}
-                        <div className="bg-slate-700 rounded p-2 mt-2">
-                          <div className="space-y-1 text-xs">
-                            <div className="flex justify-between items-center">
-                              <span className="text-orange-300">• Market rate:</span>
-                              <span className="text-white font-mono">₹{liveRate.toLocaleString('en-IN', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                              <span className="text-orange-300">• Bank rate:</span>
-                              <span className="text-white font-mono">₹{rate.toLocaleString('en-IN', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}</span>
-                            </div>
-                            <div className="border-t border-slate-600 pt-1 mt-1">
-                              <div className="flex justify-between items-center">
-                                <span className="text-white font-medium">Markup per $:</span>
-                                <span className="text-white font-semibold font-mono">₹{bankMarkupPerUsd.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
           </div>
         </div>

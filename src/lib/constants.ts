@@ -96,11 +96,11 @@ export const CURRENCY_LIMITS = {
       YOUR_CLIENT_PAYS: 'Your client pays',
       RECIPIENT_GETS: 'Recipient gets',
       EXCHANGE_RATE: 'Exchange rate',
+      UPWORK_RATE: 'Upwork rate',
       RATE_MARKUP: 'Rate markup',
       PLATFORM_FEE: 'Platform Fee',
       YOU_LOSE_WITH: 'You lose with',
       GET_STARTED: 'Get Started',
-      ZERO_MARKUP: '✓ ZERO MARKUP',
       SIGN_UP_TEXT: 'Sign up in 2 minutes • No hidden fees',
     },
     TOOLTIPS: {
